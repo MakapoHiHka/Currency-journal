@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="004" author="admin">
+        <!-- Добавление валют -->
+        <insert tableName="rate_dict">
+            <column name="id" value="1"/>
+            <column name="num_code" value="840"/>
+            <column name="char_code" value="USD"/>
+            <column name="nominal" value="1"/>
+            <column name="name" value="Доллар США"/>
+        </insert>
+
+        <insert tableName="rate_dict">
+            <column name="id" value="2"/>
+            <column name="num_code" value="978"/>
+            <column name="char_code" value="EUR"/>
+            <column name="nominal" value="1"/>
+            <column name="name" value="Евро"/>
+        </insert>
+
+        <insert tableName="rate_dict">
+            <column name="id" value="3"/>
+            <column name="num_code" value="826"/>
+            <column name="char_code" value="GBP"/>
+            <column name="nominal" value="1"/>
+            <column name="name" value="Фунт стерлингов"/>
+        </insert>
+
+        <!-- Добавление стран -->
+        <insert tableName="countries">
+            <column name="id" value="1"/>
+            <column name="iso_code" value="USA"/>
+            <column name="name" value="США"/>
+        </insert>
+
+        <insert tableName="countries">
+            <column name="id" value="2"/>
+            <column name="iso_code" value="DEU"/>
+            <column name="name" value="Германия"/>
+        </insert>
+
+        <insert tableName="countries">
+            <column name="id" value="3"/>
+            <column name="iso_code" value="GBR"/>
+            <column name="name" value="Великобритания"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
