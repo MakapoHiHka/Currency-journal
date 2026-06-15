@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 // Сущность журнала курса валют
-// Наследует AbstractBaseFixationDateTimeEntity для автоматической фиксации created/updated
 @Entity
 @Table(name = "rates", indexes = {
         // Индекс для ускорения поиска по валюте и дате
@@ -33,12 +32,11 @@ public class RateEntity extends AbstractBaseFixationDateTimeEntity {
     @Column(name = "currency_id", nullable = false)
     private String currencyId;
 
-    // Идентификатор страны (внешний ключ на таблицу countries)
+    // Идентификатор страны
     @Column(name = "country_id", nullable = false)
     private Long countryId;
 
     // Связь со страной-носителем валюты
-    // ManyToOne: много записей курса могут относиться к одной стране
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_rates_country"))
@@ -49,7 +47,6 @@ public class RateEntity extends AbstractBaseFixationDateTimeEntity {
     private Long rateDictId;
 
     // Связь со справочником валюты
-    // ManyToOne: много записей курса могут относиться к одной валюте
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rate_dict_id", insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_rates_rate_dict"))

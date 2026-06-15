@@ -7,13 +7,13 @@
 
     <changeSet id="002" author="admin">
         <createTable tableName="countries">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="num_code" type="VARCHAR(10)">
+            <column name="num_code" type="INTEGER">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="char_code" type="VARCHAR(10)">
@@ -21,7 +21,6 @@
             </column>
         </createTable>
 
-        <createSequence sequenceName="countries_seq" startValue="1" incrementBy="1"/>
     </changeSet>
 
 </databaseChangeLog>

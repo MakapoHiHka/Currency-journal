@@ -8,6 +8,6 @@
     <include file="db/changelog/changes/001-create-rate-dict-table.xml"/>
     <include file="db/changelog/changes/002-create-countries-table.xml"/>
     <include file="db/changelog/changes/003-create-rates-table.xml"/>
-    <!--<include file="db/changelog/changes/004-insert-initial-data.xml"/> !-->
+    <include file="db/changelog/changes/004-insert-initial-data.xml"/>
 
 </databaseChangeLog>

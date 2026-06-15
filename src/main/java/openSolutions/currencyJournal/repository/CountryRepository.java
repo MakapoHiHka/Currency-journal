@@ -3,6 +3,7 @@ package openSolutions.currencyJournal.repository;
 import openSolutions.currencyJournal.entity.CountryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Репозиторий для работы со справочником стран (countries)
+ * Репозиторий для работы со справочником стран
  */
 @Repository
 public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
@@ -49,7 +50,7 @@ public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
     Page<CountryEntity> findAll(Pageable pageable);
 
     /**
-     * Поиск стран по имени с пагинацией (регистронезависимый поиск)
+     * Поиск стран по имени с пагинацией
      */
     @Query("SELECT c FROM CountryEntity c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<CountryEntity> findByNameContaining(@Param("name") String name, Pageable pageable);
@@ -60,8 +61,7 @@ public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
     @Query("SELECT c FROM CountryEntity c WHERE c.charCode IN :codes")
     List<CountryEntity> findByCharCodeIn(@Param("codes") List<String> codes);
 
-    /**
-     * Найти все страны с сортировкой по имени
-     */
+
+    @EntityGraph(attributePaths = {"rates"})
     List<CountryEntity> findAllByOrderByNameAsc();
 }

@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 // Базовый абстрактный класс сущности с фиксацией даты и времени создания/обновления
-// EntityListeners подключает автоматическое заполнение полей created и updated
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter

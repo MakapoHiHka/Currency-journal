@@ -3,6 +3,7 @@ package openSolutions.currencyJournal.repository;
 import openSolutions.currencyJournal.entity.RateEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,48 +15,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Репозиторий для работы с журналом курса валют (rates)
- */
 @Repository
 public interface RateRepository extends JpaRepository<RateEntity, Long> {
 
-    /**
-     * Найти курс валюты по идентификатору валюты из ЦБ и дате
-     */
-    Optional<RateEntity> findByCurrencyIdAndRateDate(String currencyId, LocalDateTime rateDate);
-
-    /**
-     * Найти все курсы валюты за период
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.currencyId = :currencyId " +
-            "AND r.rateDate BETWEEN :startDate AND :endDate " +
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.currencyId = :currencyId AND r.rateDate BETWEEN :startDate AND :endDate " +
             "ORDER BY r.rateDate DESC")
     List<RateEntity> findByCurrencyIdAndPeriod(
             @Param("currencyId") String currencyId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
-    /**
-     * Найти курсы валют с пагинацией и сортировкой
-     */
     @Override
+    @EntityGraph(attributePaths = {"country", "rateDict"})
     Page<RateEntity> findAll(Pageable pageable);
 
-    /**
-     * Поиск курсов валют с фильтрацией по дате
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.rateDate >= :startDate " +
-            "ORDER BY r.rateDate DESC")
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.rateDate >= :startDate ORDER BY r.rateDate DESC")
     Page<RateEntity> findByRateDateAfter(
             @Param("startDate") LocalDateTime startDate,
             Pageable pageable);
 
-    /**
-     * Поиск курсов валют с фильтрацией по валюте и периоду
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.currencyId = :currencyId " +
-            "AND r.rateDate BETWEEN :startDate AND :endDate " +
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.currencyId = :currencyId AND r.rateDate BETWEEN :startDate AND :endDate " +
             "ORDER BY r.rateDate DESC")
     Page<RateEntity> findByCurrencyIdAndRateDateBetween(
             @Param("currencyId") String currencyId,
@@ -63,46 +46,14 @@ public interface RateRepository extends JpaRepository<RateEntity, Long> {
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
 
-    /**
-     * Поиск курсов валют с динамической фильтрацией по нескольким параметрам
-     */
-    @Query("SELECT r FROM RateEntity r WHERE " +
-            "(:currencyId IS NULL OR r.currencyId = :currencyId) AND " +
-            "(:countryId IS NULL OR r.countryId = :countryId) AND " +
-            "(:rateDictId IS NULL OR r.rateDictId = :rateDictId) AND " +
-            "(:startDate IS NULL OR r.rateDate >= :startDate) AND " +
-            "(:endDate IS NULL OR r.rateDate <= :endDate) " +
-            "ORDER BY r.rateDate DESC")
-    Page<RateEntity> findByFilters(
-            @Param("currencyId") String currencyId,
-            @Param("countryId") Long countryId,
-            @Param("rateDictId") Long rateDictId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
-            Pageable pageable);
-
-    /**
-     * Найти последний курс валюты по currencyId
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.currencyId = :currencyId " +
-            "ORDER BY r.rateDate DESC")
+    @EntityGraph(attributePaths = {"country", "rateDict"})
     Optional<RateEntity> findTopByCurrencyIdOrderByRateDateDesc(@Param("currencyId") String currencyId);
 
-    /**
-     * Найти курсы валют по списку currencyId
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.currencyId IN :currencyIds " +
-            "ORDER BY r.rateDate DESC")
+    @EntityGraph(attributePaths = {"country", "rateDict"})
     List<RateEntity> findByCurrencyIdIn(@Param("currencyIds") List<String> currencyIds);
 
-    /**
-     * Проверить существование курса за дату
-     */
     boolean existsByCurrencyIdAndRateDate(String currencyId, LocalDateTime rateDate);
 
-    /**
-     * Удалить курсы валют за период
-     */
     @Modifying
     @Transactional
     @Query("DELETE FROM RateEntity r WHERE r.rateDate BETWEEN :startDate AND :endDate")
@@ -110,47 +61,73 @@ public interface RateRepository extends JpaRepository<RateEntity, Long> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
-    /**
-     * Удалить курсы конкретной валюты за период
-     */
     @Modifying
     @Transactional
-    @Query("DELETE FROM RateEntity r WHERE r.currencyId = :currencyId " +
-            "AND r.rateDate BETWEEN :startDate AND :endDate")
+    @Query("DELETE FROM RateEntity r WHERE r.currencyId = :currencyId AND r.rateDate BETWEEN :startDate AND :endDate")
     int deleteByCurrencyIdAndRateDateBetween(
             @Param("currencyId") String currencyId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
-    /**
-     * Найти курсы валют для конкретной страны
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
-            "AND r.rateDate BETWEEN :startDate AND :endDate " +
+    // ИСПРАВЛЕНО: убран @EntityGraph, добавлен JOIN FETCH в @Query
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.countryId = :countryId AND r.rateDate BETWEEN :startDate AND :endDate " +
             "ORDER BY r.rateDate DESC")
-    List<RateEntity> findByCountryIdAndPeriod(
+    List<RateEntity> findByCountryIdAndRateDateBetween(
             @Param("countryId") Long countryId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
-    /**
-     * Получить уникальный список currencyId из журнала
-     */
     @Query("SELECT DISTINCT r.currencyId FROM RateEntity r ORDER BY r.currencyId")
     List<String> findDistinctCurrencyIds();
 
-    /**
-     * Найти курсы валют по номиналу
-     */
-    @Query("SELECT r FROM RateEntity r WHERE r.nominal = :nominal " +
-            "AND r.rateDate BETWEEN :startDate AND :endDate")
-    List<RateEntity> findByNominalAndPeriod(
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.nominal = :nominal AND r.rateDate BETWEEN :startDate AND :endDate")
+    List<RateEntity> findByNominalAndRateDateBetween(
             @Param("nominal") Long nominal,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
-    /**
-     * Найти все курсы валют с сортировкой по дате (новые сначала)
-     */
-    List<RateEntity> findAllByOrderByRateDateDesc();
+    @EntityGraph(attributePaths = {"country", "rateDict"})
+    List<RateEntity> findAllByRateDateAfterOrderByRateDateDesc(@Param("startDate") LocalDateTime startDate);
+
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.currencyId = :currencyId AND r.rateDate >= :startDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCurrencyIdAndRateDateAfter(
+            @Param("currencyId") String currencyId,
+            @Param("startDate") LocalDateTime startDate,
+            Pageable pageable);
+
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.currencyId = :currencyId AND r.rateDate <= :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCurrencyIdAndRateDateBefore(
+            @Param("currencyId") String currencyId,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
+
+    // ИСПРАВЛЕНО: добавлен @EntityGraph
+    @EntityGraph(attributePaths = {"country", "rateDict"})
+    Page<RateEntity> findByCurrencyId(String currencyId, Pageable pageable);
+
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.rateDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByRateDateBetween(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
+
+    // ИСПРАВЛЕНО: добавлен JOIN FETCH
+    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
+            "WHERE r.rateDate <= :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByRateDateBefore(
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
 }

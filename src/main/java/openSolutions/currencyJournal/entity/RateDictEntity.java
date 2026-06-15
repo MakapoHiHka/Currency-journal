@@ -22,12 +22,11 @@ import java.util.List;
 public class RateDictEntity extends AbstractBaseDictEntity {
 
     // Список курсов валют, связанных с данным справочником валюты
-    // Связь OneToMany: одна валюта может иметь много записей курса по датам
     @OneToMany(mappedBy = "rateDict")
     private List<RateEntity> rates = new ArrayList<>();
 
-    // Метод для получения списка курсов валют
-//    public List<RateEntity> rates() {
-//        return rates;
-//    }
+//     Метод для получения списка курсов валют
+    public List<RateEntity> rates() {
+        return rates;
+    }
 }

@@ -7,7 +7,7 @@
 
     <changeSet id="003" author="admin">
         <createTable tableName="rates">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="currency_id" type="VARCHAR(50)">
@@ -34,7 +34,7 @@
             <column name="updated" type="TIMESTAMP"/>
         </createTable>
 
-        <createSequence sequenceName="rates_seq" startValue="1" incrementBy="1"/>
+
 
         <createIndex indexName="idx_rates_currency_date" tableName="rates">
             <column name="currency_id"/>
