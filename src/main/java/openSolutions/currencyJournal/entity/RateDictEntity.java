@@ -1,5 +1,6 @@
 package openSolutions.currencyJournal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,6 +24,7 @@ public class RateDictEntity extends AbstractBaseDictEntity<Long> {
 
     // Список курсов валют, связанных с данным справочником валюты
     @OneToMany(mappedBy = "rateDict")
+    @JsonIgnore
     private List<RateEntity> rates = new ArrayList<>();
 
 //     Метод для получения списка курсов валют

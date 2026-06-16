@@ -1,5 +1,6 @@
 package openSolutions.currencyJournal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,6 +24,7 @@ public class CountryEntity extends AbstractBaseDictEntity<Long> {
 
 
     @OneToMany(mappedBy = "country")
+    @JsonIgnore
     private List<RateEntity> rates = new ArrayList<>();
 
     public List<RateEntity> rates() {

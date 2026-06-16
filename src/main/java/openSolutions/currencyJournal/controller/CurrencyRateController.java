@@ -1,6 +1,8 @@
 package openSolutions.currencyJournal.controller;
 
+import jakarta.validation.Valid;
 import openSolutions.currencyJournal.dto.*;
+import openSolutions.currencyJournal.entity.RateEntity;
 import openSolutions.currencyJournal.service.CurrencyRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -200,5 +203,45 @@ public class CurrencyRateController {
         response.put("notes", "здесь будут данные об автоматической синхронизации");
 
         return ResponseEntity.ok(response);
+    }
+    /**
+
+     * PUT /api/currency/rates
+     * Тело запроса содержит id, nominal и value
+     */
+    @PutMapping("/rates")
+    @Operation(summary = "Редактирование курса валюты")
+    public ResponseEntity<Map<String, Object>> updateRate(@Valid @RequestBody RateUpdateRequest request) {
+
+        log.info("PUT /api/currency/rates - Запрос на редактирование курса валюты ID={}", request.getId());
+
+        try {
+            RateEntity updatedRate = currencyRateService.updateRate(request);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Курс валюты успешно обновлен");
+            response.put("data", updatedRate);
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+            log.error("Ошибка при редактировании курса валюты: {}", e.getMessage());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+
+        } catch (Exception e) {
+            log.error("Неожиданная ошибка при редактировании курса валюты: {}", e.getMessage(), e);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Внутренняя ошибка сервера");
+
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 }

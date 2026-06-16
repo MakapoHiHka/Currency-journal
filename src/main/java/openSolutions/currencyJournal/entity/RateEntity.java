@@ -1,5 +1,6 @@
 package openSolutions.currencyJournal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,6 +41,7 @@ public class RateEntity extends AbstractBaseFixationDateTimeEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "fk_rates_country"))
+    @JsonIgnore
     private CountryEntity country;
 
     // Идентификатор справочника валют (внешний ключ на таблицу rate_dict)

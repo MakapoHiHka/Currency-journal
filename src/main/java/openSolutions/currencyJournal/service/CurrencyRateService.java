@@ -334,4 +334,30 @@ public class CurrencyRateService {
                 .map(rateMapper::toRateDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public RateEntity updateRate(RateUpdateRequest request) {
+        log.info("Запрос на редактирование курса валюты с ID: {}", request.getId());
+
+        // Найти существующую запись по id из DTO
+        RateEntity existingRate = rateRepository.findById(request.getId())
+                .orElseThrow(() -> {
+                    log.error("Запись курса валюты с ID {} не найдена", request.getId());
+                    return new RuntimeException("Запись курса валюты с ID " + request.getId() + " не найдена");
+                });
+
+        // Обновить номинал
+        existingRate.setNominal(request.getNominal());
+        // Обновить значение курса
+        existingRate.setValue(request.getValue());
+        // Установить текущее время обновления
+        LocalDateTime now = LocalDateTime.now();
+        existingRate.setUpdated(now);
+
+        // Сохранить изменения в БД
+        RateEntity updatedRate = rateRepository.save(existingRate);
+        log.info("Курс валюты с ID {} успешно обновлен", request.getId());
+
+        return updatedRate;
+    }
 }
