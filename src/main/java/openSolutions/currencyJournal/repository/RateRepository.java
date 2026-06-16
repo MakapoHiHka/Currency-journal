@@ -130,4 +130,65 @@ public interface RateRepository extends JpaRepository<RateEntity, Long> {
     Page<RateEntity> findByRateDateBefore(
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
+
+    Page<RateEntity> findByCountryId(Long countryId, Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.rateDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndRateDateBetween(
+            @Param("countryId") Long countryId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.rateDate >= :startDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndRateDateAfter(
+            @Param("countryId") Long countryId,
+            @Param("startDate") LocalDateTime startDate,
+            Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.rateDate <= :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndRateDateBefore(
+            @Param("countryId") Long countryId,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
+
+    // Комбинация countryId + currencyId
+    Page<RateEntity> findByCountryIdAndCurrencyId(Long countryId, String currencyId, Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.currencyId = :currencyId " +
+            "AND r.rateDate BETWEEN :startDate AND :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndCurrencyIdAndRateDateBetween(
+            @Param("countryId") Long countryId,
+            @Param("currencyId") String currencyId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.currencyId = :currencyId " +
+            "AND r.rateDate >= :startDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndCurrencyIdAndRateDateAfter(
+            @Param("countryId") Long countryId,
+            @Param("currencyId") String currencyId,
+            @Param("startDate") LocalDateTime startDate,
+            Pageable pageable);
+
+    @Query("SELECT r FROM RateEntity r WHERE r.countryId = :countryId " +
+            "AND r.currencyId = :currencyId " +
+            "AND r.rateDate <= :endDate " +
+            "ORDER BY r.rateDate DESC")
+    Page<RateEntity> findByCountryIdAndCurrencyIdAndRateDateBefore(
+            @Param("countryId") Long countryId,
+            @Param("currencyId") String currencyId,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
 }

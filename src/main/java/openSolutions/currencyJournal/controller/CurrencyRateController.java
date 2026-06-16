@@ -71,8 +71,6 @@ public class CurrencyRateController {
             @Parameter(description = "ID страны")
             @RequestParam(required = false) Long countryId,
 
-            @Parameter(description = "ID справочника валют")
-            @RequestParam(required = false) Long rateDictId,
 
             @Parameter(description = "Начальная дата")
             @RequestParam(required = false)
@@ -102,7 +100,7 @@ public class CurrencyRateController {
             Pageable pageable = PageRequest.of(page, size, sort);
 
             Page<RateDto> ratesPage = currencyRateService.getRates(
-                    currencyId, countryId, rateDictId, startDate, endDate, pageable);
+                    currencyId, countryId, startDate, endDate, pageable);
 
             Map<String, Object> response = new HashMap<>();
             response.put("content", ratesPage.getContent());
