@@ -34,3 +34,8 @@ release.properties
 */target
 !.mvn/wrapper/maven-wrapper.jar
 ./mwnv*
+
+mvnw.cmd
+mvnw
+HELP.md
+.mvn/
