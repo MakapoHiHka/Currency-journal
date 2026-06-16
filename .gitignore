@@ -1,0 +1,36 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Директория сборки Maven (содержит target/classes, target/*.jar и т.д.)
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Файлы и директории IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+*/target
+!.mvn/wrapper/maven-wrapper.jar
+./mwnv*
