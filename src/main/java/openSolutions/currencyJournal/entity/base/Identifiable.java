@@ -1,8 +1,8 @@
 package openSolutions.currencyJournal.entity.base;
 
 
-public interface Identifiable {
+public interface Identifiable<EID> {
 
-    Long getId();
-    void setId(Long id);
+    EID getId();
+    void setId(EID id);
 }

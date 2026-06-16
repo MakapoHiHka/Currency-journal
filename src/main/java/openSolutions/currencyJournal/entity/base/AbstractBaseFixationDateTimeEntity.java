@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public abstract class AbstractBaseFixationDateTimeEntity extends AbstractBaseEntity implements FixationDateTime {
+public abstract class AbstractBaseFixationDateTimeEntity<EID> extends AbstractBaseEntity<EID> implements FixationDateTime {
 
     // Дата и время создания записи (заполняется автоматически при сохранении)
     @CreatedDate

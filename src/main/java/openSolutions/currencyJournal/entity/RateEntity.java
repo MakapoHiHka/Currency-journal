@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RateEntity extends AbstractBaseFixationDateTimeEntity {
+public class RateEntity extends AbstractBaseFixationDateTimeEntity<Long> {
 
     @Column(name = "currency_id", nullable = false)
     private String currencyId;

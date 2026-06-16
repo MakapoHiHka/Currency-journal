@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RateDictEntity extends AbstractBaseDictEntity {
+public class RateDictEntity extends AbstractBaseDictEntity<Long> {
 
     // Список курсов валют, связанных с данным справочником валюты
     @OneToMany(mappedBy = "rateDict")

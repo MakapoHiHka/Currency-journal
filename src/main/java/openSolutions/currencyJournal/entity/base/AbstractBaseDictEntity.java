@@ -9,7 +9,7 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class AbstractBaseDictEntity extends AbstractBaseEntity {
+public abstract class AbstractBaseDictEntity<EID> extends AbstractBaseEntity<EID> {
 
     @Column(name = "name", nullable = false)
     private String name;

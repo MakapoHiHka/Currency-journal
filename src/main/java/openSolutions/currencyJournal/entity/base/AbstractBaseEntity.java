@@ -12,12 +12,12 @@ import lombok.Setter;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class AbstractBaseEntity implements Identifiable {
+public abstract class AbstractBaseEntity<EID> implements Identifiable<EID> {
 
     // Уникальный идентификатор сущности
     // IDENTITY означает, что БД сама генерирует значение (автоинкремент)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    private EID id;
 }

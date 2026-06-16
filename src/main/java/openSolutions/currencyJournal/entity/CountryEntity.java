@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CountryEntity extends AbstractBaseDictEntity {
+public class CountryEntity extends AbstractBaseDictEntity<Long> {
 
 
     @OneToMany(mappedBy = "country")
