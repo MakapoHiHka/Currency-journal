@@ -6,10 +6,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // 1. НОВЫЙ МЕТОД: Обработка ошибок валидации (@Valid)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.warn("Ошибка валидации данных: {}", ex.getMessage());
+
+        // Собираем все ошибки в удобную структуру: { "fieldName": "error message" }
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage())
+        );
+
+        // Формируем ответ
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("message", "Ошибка валидации входных данных");
+        response.put("errors", errors); // Детальный список ошибок по полям
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); // 400 статус
+    }
 
     // Обработка бизнес-исключений
     @ExceptionHandler(RuntimeException.class)
