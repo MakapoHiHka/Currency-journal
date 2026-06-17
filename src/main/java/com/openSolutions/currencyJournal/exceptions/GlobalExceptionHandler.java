@@ -2,6 +2,7 @@ package com.openSolutions.currencyJournal.exceptions;
 
 import com.openSolutions.currencyJournal.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +36,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); // 400 статус
     }
 
+    // неверное поле сортировки
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidDataAccess(InvalidDataAccessApiUsageException ex) {
+        log.warn("Ошибка доступа к данным: {}", ex.getMessage());
+        return new ResponseEntity<>(
+                ApiResponse.error("Недопустимое поле для сортировки или фильтрации"),
+                HttpStatus.BAD_REQUEST
+        );
+    }
     // Обработка бизнес-исключений
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex) {

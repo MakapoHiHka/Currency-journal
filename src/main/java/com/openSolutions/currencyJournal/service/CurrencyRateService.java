@@ -334,12 +334,13 @@ public class CurrencyRateService {
      * Получить курсы за сегодня
      */
     @Transactional(readOnly = true)
-    public List<RateDto> getTodayRates() {
-        LocalDateTime today = LocalDateTime.now().toLocalDate().atStartOfDay();
-        log.debug("Запрос курсов за сегодня: {}", today);
-        return rateRepository.findAllByRateDateAfterOrderByRateDateDesc(today).stream()
-                .map(rateMapper::toRateDto)
-                .collect(Collectors.toList());
+    public Page<RateDto> getTodayRates(Pageable pageable) {
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        Page<RateEntity> entityPage = rateRepository.findByRateDateBetween(startOfDay, endOfDay, pageable);
+
+        return entityPage.map(rateMapper::toRateDto);
     }
 
     @Transactional

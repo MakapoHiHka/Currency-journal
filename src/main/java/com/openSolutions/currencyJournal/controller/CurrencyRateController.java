@@ -56,9 +56,30 @@ public class CurrencyRateController {
 
     @GetMapping("/today")
     @Operation(summary = "Получение курсов валют за сегодня")
-    public ResponseEntity<ApiResponse<List<RateDto>>> getTodayRates() {
-        log.debug("Запрос курсов за сегодня");
-        return ResponseEntity.ok(ApiResponse.success(currencyRateService.getTodayRates()));
+    public ResponseEntity<ApiResponse<PageResponse<RateDto>>> getTodayRates(
+            @Parameter(description = "Номер страницы")
+            @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Размер страницы")
+            @RequestParam(defaultValue = "54") int size,
+
+            // используем поле, которое есть в RateEntity
+            @Parameter(description = "Поле для сортировки (rateDate, currencyId, value)")
+            @RequestParam(defaultValue = "currencyId") String sortBy,
+
+            @Parameter(description = "Направление сортировки")
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        log.debug("Запрос курсов за сегодня: page={}, size={}, sortBy={}", page, size, sortBy);
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<RateDto> ratesPage = currencyRateService.getTodayRates(pageable);
+
+        return ResponseEntity.ok(ApiResponse.success(PageResponse.of(ratesPage)));
     }
 
     @GetMapping("/latest/{currencyId}")
