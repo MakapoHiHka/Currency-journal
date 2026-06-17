@@ -1,0 +1,39 @@
+package com.openSolutions.currencyJournal.controller;
+
+import com.openSolutions.currencyJournal.dto.CountryDto;
+import com.openSolutions.currencyJournal.dto.RateDictDto;
+import com.openSolutions.currencyJournal.service.CurrencyRateService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/currency")
+@RequiredArgsConstructor
+@Tag(name = "Dictionaries", description = "Справочники валют и стран")
+public class CurrencyDictionaryController {
+
+    private final CurrencyRateService currencyRateService;
+
+    @GetMapping("/dict")
+    @Operation(summary = "Получение справочника валют")
+    public ResponseEntity<List<RateDictDto>> getRateDict() {
+        log.debug("Запрос справочника валют");
+        return ResponseEntity.ok(currencyRateService.getRateDict());
+    }
+
+    @GetMapping("/countries")
+    @Operation(summary = "Получение справочника стран")
+    public ResponseEntity<List<CountryDto>> getCountries() {
+        log.debug("Запрос справочника стран");
+        return ResponseEntity.ok(currencyRateService.getCountries());
+    }
+}
