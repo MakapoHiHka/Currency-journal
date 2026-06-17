@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.entity;
+package com.openSolutions.currencyJournal.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.openSolutions.currencyJournal.entity.base.AbstractBaseFixationDateTimeEntity;
+import com.openSolutions.currencyJournal.domain.entity.base.AbstractBaseFixationDateTimeEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

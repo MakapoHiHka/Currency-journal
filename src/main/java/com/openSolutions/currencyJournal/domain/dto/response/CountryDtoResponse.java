@@ -1,18 +1,13 @@
-package com.openSolutions.currencyJournal.dto;
-
+package com.openSolutions.currencyJournal.domain.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * DTO для справочника стран
- */
 @Setter
 @Getter
 @NoArgsConstructor
-public class CountryDto {
-
+public class CountryDtoResponse {
     // Идентификатор
     private Long id;
 

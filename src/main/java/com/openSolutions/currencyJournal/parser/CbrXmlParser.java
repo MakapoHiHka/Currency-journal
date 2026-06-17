@@ -1,7 +1,7 @@
 package com.openSolutions.currencyJournal.parser;
 
-import com.openSolutions.currencyJournal.dto.CbrCurrencyDto;
-import com.openSolutions.currencyJournal.dto.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
+import com.openSolutions.currencyJournal.domain.dto.cbr.CbrDailyRatesDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

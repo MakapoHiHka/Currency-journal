@@ -1,6 +1,6 @@
 package com.openSolutions.currencyJournal.repository;
 
-import com.openSolutions.currencyJournal.entity.RateDictEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

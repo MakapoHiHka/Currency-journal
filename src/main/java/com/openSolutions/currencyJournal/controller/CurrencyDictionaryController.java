@@ -1,8 +1,8 @@
 package com.openSolutions.currencyJournal.controller;
 
-import com.openSolutions.currencyJournal.dto.ApiResponse;
-import com.openSolutions.currencyJournal.dto.CountryDto;
-import com.openSolutions.currencyJournal.dto.RateDictDto;
+import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
 import com.openSolutions.currencyJournal.service.CurrencyRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,14 +26,14 @@ public class CurrencyDictionaryController {
 
     @GetMapping("/dict")
     @Operation(summary = "Получение справочника валют")
-    public ResponseEntity<ApiResponse<List<RateDictDto>>> getRateDict() {
+    public ResponseEntity<ApiResponse<List<RateDictDtoResponse>>> getRateDict() {
         log.debug("Запрос справочника валют");
         return ResponseEntity.ok(ApiResponse.success(currencyRateService.getRateDict()));
     }
 
     @GetMapping("/countries")
     @Operation(summary = "Получение справочника стран")
-    public ResponseEntity<ApiResponse<List<CountryDto>>> getCountries() {
+    public ResponseEntity<ApiResponse<List<CountryDtoResponse>>> getCountries() {
         log.debug("Запрос справочника стран");
         return ResponseEntity.ok(ApiResponse.success(currencyRateService.getCountries()));
     }

@@ -1,7 +1,7 @@
 package com.openSolutions.currencyJournal.controller;
 
-import com.openSolutions.currencyJournal.dto.StatusResponse;
-import com.openSolutions.currencyJournal.dto.SyncResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.SyncResponse;
 import com.openSolutions.currencyJournal.service.CurrencyRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

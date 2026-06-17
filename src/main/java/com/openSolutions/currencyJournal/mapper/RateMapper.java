@@ -1,11 +1,9 @@
 package com.openSolutions.currencyJournal.mapper;
 
-import com.openSolutions.currencyJournal.dto.RateDto;
-import com.openSolutions.currencyJournal.dto.RateDictDto;
-import com.openSolutions.currencyJournal.dto.CountryDto;
-import com.openSolutions.currencyJournal.entity.RateEntity;
-import com.openSolutions.currencyJournal.entity.RateDictEntity;
-import com.openSolutions.currencyJournal.entity.CountryEntity;
+import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
+import com.openSolutions.currencyJournal.domain.entity.RateEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,12 +15,12 @@ public class RateMapper {
     /**
      * Конвертировать RateEntity в RateDto
      */
-    public RateDto toRateDto(RateEntity entity) {
+    public RateDtoResponse toRateDto(RateEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        RateDto dto = new RateDto();
+        RateDtoResponse dto = new RateDtoResponse();
         dto.setId(entity.getId());
         dto.setCurrencyId(entity.getCurrencyId());
         dto.setCountryId(entity.getCountryId());
@@ -50,36 +48,12 @@ public class RateMapper {
     /**
      * Конвертировать RateDictEntity в RateDictDto
      */
-    public RateDictDto toRateDictDto(RateDictEntity entity) {
+    public RateDictDtoResponse toRateDictDtoResponse(RateDictEntity entity) {
         if (entity == null) {
             return null;
         }
 
-        RateDictDto dto = new RateDictDto();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setNumCode(entity.getNumCode());
-        dto.setCharCode(entity.getCharCode());
-
-        // Подсчитать количество записей курса
-        if (entity.getRates() != null) {
-            dto.setRatesCount((long) entity.getRates().size());
-        } else {
-            dto.setRatesCount(0L);
-        }
-
-        return dto;
-    }
-
-    /**
-     * Конвертировать CountryEntity в CountryDto
-     */
-    public CountryDto toCountryDto(CountryEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        CountryDto dto = new CountryDto();
+        RateDictDtoResponse dto = new RateDictDtoResponse();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setNumCode(entity.getNumCode());

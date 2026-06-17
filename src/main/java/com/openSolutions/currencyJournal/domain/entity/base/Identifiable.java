@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.entity.base;
+package com.openSolutions.currencyJournal.domain.entity.base;
 
 
 public interface Identifiable<EID> {

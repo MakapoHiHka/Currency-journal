@@ -1,18 +1,23 @@
 package com.openSolutions.currencyJournal.service;
 
-import com.openSolutions.currencyJournal.dto.*;
-import com.openSolutions.currencyJournal.entity.CountryEntity;
-import com.openSolutions.currencyJournal.entity.RateDictEntity;
-import com.openSolutions.currencyJournal.entity.RateEntity;
+import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
+import com.openSolutions.currencyJournal.domain.dto.cbr.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
+import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
+import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
+import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateEntity;
+import com.openSolutions.currencyJournal.mapper.CountryMapper;
+import com.openSolutions.currencyJournal.mapper.PageableMapper;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
 import lombok.RequiredArgsConstructor;
-import com.openSolutions.currencyJournal.dto.*;
-import com.openSolutions.currencyJournal.entity.*;
 import com.openSolutions.currencyJournal.mapper.RateMapper;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
-import com.openSolutions.currencyJournal.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +43,8 @@ public class CurrencyRateService {
     private final CountryRepository countryRepository;
     private final RateRepository rateRepository;
     private final RateMapper rateMapper;
+    private final PageableMapper pageableMapper;
+    private final CountryMapper countryMapper;
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
@@ -144,7 +151,7 @@ public class CurrencyRateService {
     }
 
     /**
-     * Загрузить все справочники валют в Map по числовому коду (1 запрос)
+     * Загрузить все справочники валют в Map по числовому коду
      */
     private Map<Integer, RateDictEntity> loadRateDictByNumCode() {
         return rateDictRepository.findAll().stream()
@@ -152,7 +159,7 @@ public class CurrencyRateService {
     }
 
     /**
-     * Загрузить все справочники стран в Map по числовому коду (1 запрос)
+     * Загрузить все справочники стран в Map по числовому коду
      */
     private Map<Integer, CountryEntity> loadCountryByNumCode() {
         return countryRepository.findAll().stream()
@@ -160,7 +167,7 @@ public class CurrencyRateService {
     }
 
     /**
-     * Загрузить существующие currencyId за указанную дату (1 запрос)
+     * Загрузить существующие currencyId за указанную дату
      */
     private Set<String> loadExistingCurrencyIds(LocalDateTime rateDate) {
         LocalDateTime start = rateDate.toLocalDate().atStartOfDay();
@@ -225,8 +232,13 @@ public class CurrencyRateService {
      *  Чтение журнала курса валют с фильтрацией
      */
     @Transactional(readOnly = true)
-    public Page<RateDto> getRates(String currencyId, Long countryId,
-                                  LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    public Page<RateDtoResponse> getRates(RateSearchRequest request) {
+
+    String currencyId = request.getCurrencyId();
+    Long countryId = request.getCountryId();
+    LocalDateTime startDate = request.getStartDate();
+    LocalDateTime endDate = request.getEndDate();
+    Pageable pageable = pageableMapper.getPageable(request);
         log.debug("Запрос журнала курсов: currencyId={}, countryId={}, startDate={}, endDate={}",
                 currencyId, countryId, startDate, endDate);
 
@@ -302,10 +314,10 @@ public class CurrencyRateService {
      * Чтение справочника валют
      */
     @Transactional(readOnly = true)
-    public List<RateDictDto> getRateDict() {
+    public List<RateDictDtoResponse> getRateDict() {
         log.debug("Запрос справочника валют");
         return rateDictRepository.findAllByOrderByNameAsc().stream()
-                .map(rateMapper::toRateDictDto)
+                .map(rateMapper::toRateDictDtoResponse)
                 .collect(Collectors.toList());
     }
 
@@ -313,10 +325,10 @@ public class CurrencyRateService {
      * Чтение справочника стран
      */
     @Transactional(readOnly = true)
-    public List<CountryDto> getCountries() {
+    public List<CountryDtoResponse> getCountries() {
         log.debug("Запрос справочника стран");
         return countryRepository.findAllByOrderByNameAsc().stream()
-                .map(rateMapper::toCountryDto)
+                .map(countryMapper::toCountryResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -324,7 +336,7 @@ public class CurrencyRateService {
      * Получить последний курс валюты
      */
     @Transactional(readOnly = true)
-    public Optional<RateDto> getLatestRate(String currencyId) {
+    public Optional<RateDtoResponse> getLatestRate(String currencyId) {
         log.debug("Запрос последнего курса для валюты: {}", currencyId);
         return rateRepository.findTopByCurrencyIdOrderByRateDateDesc(currencyId)
                 .map(rateMapper::toRateDto);
@@ -334,7 +346,7 @@ public class CurrencyRateService {
      * Получить курсы за сегодня
      */
     @Transactional(readOnly = true)
-    public Page<RateDto> getTodayRates(Pageable pageable) {
+    public Page<RateDtoResponse> getTodayRates(Pageable pageable) {
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
@@ -344,7 +356,7 @@ public class CurrencyRateService {
     }
 
     @Transactional
-    public RateDto updateRate(RateUpdateRequest request) {
+    public RateDtoResponse updateRate(RateUpdateRequest request) {
         log.info("Запрос на редактирование курса валюты с ID: {}", request.getId());
 
         // Найти существующую запись по id из DTO

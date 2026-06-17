@@ -1,9 +1,9 @@
 package com.openSolutions.currencyJournal.service;
 
-import com.openSolutions.currencyJournal.dto.CbrCurrencyDto;
-import com.openSolutions.currencyJournal.entity.CountryEntity;
-import com.openSolutions.currencyJournal.entity.RateDictEntity;
-import com.openSolutions.currencyJournal.entity.RateEntity;
+import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
+import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;

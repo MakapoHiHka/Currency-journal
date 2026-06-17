@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.dto;
+package com.openSolutions.currencyJournal.domain.dto.cbr;
 
 import lombok.*;
 

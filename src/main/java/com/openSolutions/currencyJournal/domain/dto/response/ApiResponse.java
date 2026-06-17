@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.dto;
+package com.openSolutions.currencyJournal.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.dto;
+package com.openSolutions.currencyJournal.domain.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
-public class RateDto {
+public class RateDtoResponse {
 
     // Идентификатор записи
     private Long id;

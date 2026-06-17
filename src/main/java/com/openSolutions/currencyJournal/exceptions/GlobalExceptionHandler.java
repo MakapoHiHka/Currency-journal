@@ -1,6 +1,6 @@
 package com.openSolutions.currencyJournal.exceptions;
 
-import com.openSolutions.currencyJournal.dto.ApiResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1. НОВЫЙ МЕТОД: Обработка ошибок валидации (@Valid)
+    // Обработка ошибок валидации (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.warn("Ошибка валидации данных: {}", ex.getMessage());
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
         log.error("Бизнес-ошибка: {}", ex.getMessage());
         // Возвращаем 400 Bad Request с нашим форматом
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+    // Обработчик для отсутствующих статических ресурсов (favicon.ico и т.д.)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoResourceFound(NoResourceFoundException ex) {
+        // Логируем на уровне DEBUG, чтобы не засорять консоль
+        log.debug("Запрошен несуществующий статический ресурс: {}", ex.getResourcePath());
+        return new ResponseEntity<>(ApiResponse.error("Ресурс не найден"), HttpStatus.NOT_FOUND);
     }
 
     // Обработка всех остальных непредвиденных ошибок
