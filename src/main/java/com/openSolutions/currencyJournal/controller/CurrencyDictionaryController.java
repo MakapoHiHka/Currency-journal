@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.controller;
 
+import com.openSolutions.currencyJournal.dto.ApiResponse;
 import com.openSolutions.currencyJournal.dto.CountryDto;
 import com.openSolutions.currencyJournal.dto.RateDictDto;
 import com.openSolutions.currencyJournal.service.CurrencyRateService;
@@ -25,15 +26,15 @@ public class CurrencyDictionaryController {
 
     @GetMapping("/dict")
     @Operation(summary = "Получение справочника валют")
-    public ResponseEntity<List<RateDictDto>> getRateDict() {
+    public ResponseEntity<ApiResponse<List<RateDictDto>>> getRateDict() {
         log.debug("Запрос справочника валют");
-        return ResponseEntity.ok(currencyRateService.getRateDict());
+        return ResponseEntity.ok(ApiResponse.success(currencyRateService.getRateDict()));
     }
 
     @GetMapping("/countries")
     @Operation(summary = "Получение справочника стран")
-    public ResponseEntity<List<CountryDto>> getCountries() {
+    public ResponseEntity<ApiResponse<List<CountryDto>>> getCountries() {
         log.debug("Запрос справочника стран");
-        return ResponseEntity.ok(currencyRateService.getCountries());
+        return ResponseEntity.ok(ApiResponse.success(currencyRateService.getCountries()));
     }
 }

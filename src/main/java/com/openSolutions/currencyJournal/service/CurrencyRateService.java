@@ -343,7 +343,7 @@ public class CurrencyRateService {
     }
 
     @Transactional
-    public RateEntity updateRate(RateUpdateRequest request) {
+    public RateDto updateRate(RateUpdateRequest request) {
         log.info("Запрос на редактирование курса валюты с ID: {}", request.getId());
 
         // Найти существующую запись по id из DTO
@@ -365,6 +365,7 @@ public class CurrencyRateService {
         RateEntity updatedRate = rateRepository.save(existingRate);
         log.info("Курс валюты с ID {} успешно обновлен", request.getId());
 
-        return updatedRate;
+        return rateMapper.toRateDto(updatedRate);
+
     }
 }

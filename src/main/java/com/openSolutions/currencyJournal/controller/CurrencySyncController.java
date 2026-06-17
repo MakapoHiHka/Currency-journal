@@ -1,5 +1,7 @@
 package com.openSolutions.currencyJournal.controller;
 
+import com.openSolutions.currencyJournal.dto.StatusResponse;
+import com.openSolutions.currencyJournal.dto.SyncResponse;
 import com.openSolutions.currencyJournal.service.CurrencyRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -26,30 +26,21 @@ public class CurrencySyncController {
 
     @PostMapping("/sync")
     @Operation(summary = "Ручная синхронизация курсов валют с ЦБ")
-    public ResponseEntity<Map<String, Object>> synchronizeWithCbr() {
+    public ResponseEntity<SyncResponse> synchronizeWithCbr() {
         log.info("Запуск ручной синхронизации с ЦБ");
 
         long startTime = System.currentTimeMillis();
         int count = currencyRateService.synchronizeWithCbr();
         long duration = System.currentTimeMillis() - startTime;
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", true);
-        response.put("message", "Синхронизация успешно выполнена");
-        response.put("currenciesProcessed", count);
-        response.put("durationMs", duration);
-
+        SyncResponse response = new SyncResponse(true, "Синхронизация успешно выполнена", count, duration);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/status")
     @Operation(summary = "Проверка работоспособности")
-    public ResponseEntity<Map<String, Object>> statusCheck() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("notes", "здесь будет информация об автоматической синхронизации");
-        response.put("status", "UP");
-        response.put("service", "Currency Journal API");
-        response.put("timestamp", LocalDateTime.now());
+    public ResponseEntity<StatusResponse> statusCheck() {
+        StatusResponse response = new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), "Тут будет информация об автоматической синхронизации");
         return ResponseEntity.ok(response);
     }
 }

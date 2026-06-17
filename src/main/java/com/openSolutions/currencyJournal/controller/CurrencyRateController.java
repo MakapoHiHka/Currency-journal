@@ -1,8 +1,9 @@
 package com.openSolutions.currencyJournal.controller;
 
+import com.openSolutions.currencyJournal.dto.ApiResponse;
+import com.openSolutions.currencyJournal.dto.PageResponse;
 import com.openSolutions.currencyJournal.dto.RateDto;
 import com.openSolutions.currencyJournal.dto.RateUpdateRequest;
-import com.openSolutions.currencyJournal.entity.RateEntity;
 import com.openSolutions.currencyJournal.service.CurrencyRateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,9 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -34,7 +33,7 @@ public class CurrencyRateController {
 
     @GetMapping
     @Operation(summary = "Получение журнала курса валют с пагинацией и фильтрами")
-    public ResponseEntity<Map<String, Object>> getRates(
+    public ResponseEntity<ApiResponse<PageResponse<RateDto>>> getRates(
             @Parameter(description = "ID валюты") @RequestParam(required = false) String currencyId,
             @Parameter(description = "ID страны") @RequestParam(required = false) Long countryId,
             @Parameter(description = "Начальная дата") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -51,44 +50,35 @@ public class CurrencyRateController {
 
         Page<RateDto> ratesPage = currencyRateService.getRates(currencyId, countryId, startDate, endDate, pageable);
 
-        // Примечание: возврат Map - это антипаттерн, см. раздел оптимизации ниже
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", ratesPage.getContent());
-        response.put("totalElements", ratesPage.getTotalElements());
-        response.put("totalPages", ratesPage.getTotalPages());
-        response.put("number", ratesPage.getNumber());
-        response.put("size", ratesPage.getSize());
-
-        return ResponseEntity.ok(response);
+        // Используем фабричный метод для преобразования Page в наш DTO
+        return ResponseEntity.ok(ApiResponse.success(PageResponse.of(ratesPage)));
     }
 
     @GetMapping("/today")
     @Operation(summary = "Получение курсов валют за сегодня")
-    public ResponseEntity<List<RateDto>> getTodayRates() {
+    public ResponseEntity<ApiResponse<List<RateDto>>> getTodayRates() {
         log.debug("Запрос курсов за сегодня");
-        return ResponseEntity.ok(currencyRateService.getTodayRates());
+        return ResponseEntity.ok(ApiResponse.success(currencyRateService.getTodayRates()));
     }
 
     @GetMapping("/latest/{currencyId}")
     @Operation(summary = "Получение последнего курса валюты")
-    public ResponseEntity<Map<String, Object>> getLatestRate(@PathVariable String currencyId) {
+    public ResponseEntity<ApiResponse<RateDto>> getLatestRate(@PathVariable String currencyId) {
         log.debug("Запрос последнего курса для {}", currencyId);
 
         return currencyRateService.getLatestRate(currencyId)
-                .map(rate -> ResponseEntity.ok(Map.of("success", true, "data", rate)))
+                .map(rate -> ResponseEntity.ok(ApiResponse.success(rate)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping
     @Operation(summary = "Редактирование курса валюты")
-    public ResponseEntity<Map<String, Object>> updateRate(@Valid @RequestBody RateUpdateRequest request) {
+    public ResponseEntity<ApiResponse<RateDto>> updateRate(@Valid @RequestBody RateUpdateRequest request) {
         log.info("Редактирование курса ID={}", request.getId());
-        RateEntity updatedRate = currencyRateService.updateRate(request);
 
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Курс валюты успешно обновлен",
-                "data", updatedRate
-        ));
+        // Сервис должен возвращать DTO. Если сейчас возвращается Entity, нужно применить MapStruct или ModelMapper.
+        RateDto updatedRate = currencyRateService.updateRate(request);
+
+        return ResponseEntity.ok(ApiResponse.success("Курс валюты успешно обновлен", updatedRate));
     }
 }
