@@ -59,4 +59,18 @@ public class RateSpecification {
             return cb.lessThanOrEqualTo(root.get("rateDate"), endDate);
         };
     }
+
+    /**
+     * Fetch join для загрузки связанных сущностей одним запросом
+     */
+    public static Specification<RateEntity> fetchCountryAndRateDict() {
+        return (root, query, cb) -> {
+            // Проверяем, что это не count query
+            if (query != null && Long.class != query.getResultType()) {
+                root.fetch("country", jakarta.persistence.criteria.JoinType.LEFT);
+                root.fetch("rateDict", jakarta.persistence.criteria.JoinType.LEFT);
+            }
+            return null;
+        };
+    }
 }

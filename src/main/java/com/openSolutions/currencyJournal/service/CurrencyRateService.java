@@ -10,14 +10,11 @@ import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
-import com.openSolutions.currencyJournal.mapper.CountryToDtoResponseConverter;
-import com.openSolutions.currencyJournal.mapper.PageableMapper;
-import com.openSolutions.currencyJournal.mapper.RateDictToDtoResponseConverter;
+import com.openSolutions.currencyJournal.mapper.*;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
 import lombok.RequiredArgsConstructor;
-import com.openSolutions.currencyJournal.mapper.RateToDtoResponseConverter;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +31,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.openSolutions.currencyJournal.specification.RateSpecification.*;
-
 @Service
 @RequiredArgsConstructor
 public class CurrencyRateService {
@@ -50,6 +45,7 @@ public class CurrencyRateService {
     private final PageableMapper pageableMapper;
     private final CountryToDtoResponseConverter countryToDtoResponseConverter;
     private final RateDictToDtoResponseConverter rateDictToDtoResponseConverter;
+    private final RateSearchRequestToRateSpecificationConverter rateSearchRequestToSpecificationConverter;
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
@@ -225,12 +221,7 @@ public class CurrencyRateService {
                 request.getCurrencyId(), request.getCountryId(),
                 request.getStartDate(), request.getEndDate());
 
-        // Собираем спецификацию
-        Specification<RateEntity> spec = Specification
-                .where(hasCurrencyId(request.getCurrencyId()))
-                .and(hasCountryId(request.getCountryId()))
-                .and(rateDateAfter(request.getStartDate()))
-                .and(rateDateBefore(request.getEndDate()));
+        Specification<RateEntity> spec = rateSearchRequestToSpecificationConverter.convert(request);
 
         Pageable pageable = pageableMapper.getPageable(request);
         Page<RateEntity> ratesPage = rateRepository.findAll(spec, pageable);
