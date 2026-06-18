@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.domain.dto.cbr;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.*;
 
 /**
@@ -11,15 +12,24 @@ import lombok.*;
 @NoArgsConstructor
 public class CbrCurrencyDto {
 
+    @JacksonXmlProperty(isAttribute = true, localName = "ID")
     private String id;
 
+    @JacksonXmlProperty(localName = "NumCode")
     private Integer numCode;
 
+    @JacksonXmlProperty(localName = "CharCode")
     private String charCode;
 
+    @JacksonXmlProperty(localName = "Nominal")
     private Long nominal;
 
+    @JacksonXmlProperty(localName = "Name")
     private String name;
 
+    @JacksonXmlProperty(localName = "Value")
     private String value;
+
+    @JacksonXmlProperty(localName = "VunitRate")
+    private String vunitRate;
 }

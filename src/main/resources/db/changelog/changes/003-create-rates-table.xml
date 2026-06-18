@@ -33,9 +33,6 @@
             </column>
             <column name="updated" type="TIMESTAMP"/>
         </createTable>
-
-
-
         <createIndex indexName="idx_rates_currency_date" tableName="rates">
             <column name="currency_id"/>
             <column name="rate_date"/>

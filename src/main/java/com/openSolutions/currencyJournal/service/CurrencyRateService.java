@@ -59,94 +59,77 @@ public class CurrencyRateService {
      */
     @Transactional
     public int synchronizeWithCbr() {
-        log.info("Запуск ручной синхронизации курсов валют с ЦБ");
+        log.info("Запуск синхронизации курсов валют с ЦБ");
         long startTime = System.currentTimeMillis();
 
         try {
             // 1. Загружаем XML
             CbrDailyRatesDto ratesDto = xmlParser.parseFromUrl(cbrApiUrl);
-            LocalDateTime updateDate = ratesDto.getUpdated();
+            LocalDateTime rateDate = ratesDto.getUpdated();
             List<CbrCurrencyDto> currencies = ratesDto.getCurrencies();
-            log.info("Получено {} валют для обработки (дата: {})", currencies.size(), updateDate);
 
-            // 2. Загружаем справочники ОДИН РАЗ
+            if (currencies == null || currencies.isEmpty()) {
+                log.warn("Список валют пуст");
+                return 0;
+            }
+
+            log.info("Получено {} валют для обработки (дата курса: {})", currencies.size(), rateDate);
+
+            // 2. Загружаем справочники
             Map<Integer, RateDictEntity> rateDictByNumCode = loadRateDictByNumCode();
             Map<Integer, CountryEntity> countryByNumCode = loadCountryByNumCode();
 
-            // 3. Собираем новые записи для пакетного сохранения
-            List<RateDictEntity> newRateDicts = new ArrayList<>();
-            List<CountryEntity> newCountries = new ArrayList<>();
+            // 3. Загружаем существующие курсы за дату обновления
+            Set<String> existingCurrencyIds = loadExistingCurrencyIds(rateDate);
 
-            // 4. Загружаем существующие курсы за дату обновления (один запрос)
-            Set<String> existingCurrencyIds = loadExistingCurrencyIds(updateDate);
-
-            // 5. Первый проход: создаём новые справочники (без RateEntity)
-            for (CbrCurrencyDto currency : currencies) {
-                // Найти или создать справочник валюты
-                if (!rateDictByNumCode.containsKey(currency.getNumCode())) {
-                    RateDictEntity rateDict = createRateDictEntity(currency);
-                    newRateDicts.add(rateDict);
-                    // Временно добавляем в Map (без ID, но потом заменим)
-                    rateDictByNumCode.put(currency.getNumCode(), rateDict);
-                }
-
-                // Найти страну
-                if (!countryByNumCode.containsKey(currency.getNumCode())) {
-                    CountryEntity country = createCountryEntity(currency);
-                    newCountries.add(country);
-                    countryByNumCode.put(currency.getNumCode(), country);
-                }
-            }
-
-            // 6. сохраняем новые справочники (чтобы получить ID)
-            if (!newRateDicts.isEmpty()) {
-                rateDictRepository.saveAll(newRateDicts);
-                log.info("Создано новых записей в справочнике валют: {}", newRateDicts.size());
-            }
-            if (!newCountries.isEmpty()) {
-                countryRepository.saveAll(newCountries);
-                log.info("Создано новых записей в справочнике стран: {}", newCountries.size());
-            }
-
-            // 7. Второй проход: создаём записи курсов (теперь у справочников есть ID)
+            // 4. Создаём записи курсов
             List<RateEntity> newRates = new ArrayList<>();
             int processedCount = 0;
             int errorCount = 0;
 
             for (CbrCurrencyDto currency : currencies) {
                 try {
+                    // Найти справочники по числовому коду
                     RateDictEntity rateDict = rateDictByNumCode.get(currency.getNumCode());
                     CountryEntity country = countryByNumCode.get(currency.getNumCode());
 
-                    if (rateDict == null || country == null) {
-                        log.error("Не найдены справочники для валюты: {}", currency.getCharCode());
+                    if (rateDict == null) {
+                        log.warn("Не найден справочник валюты для кода: {} ({})",
+                                currency.getNumCode(), currency.getCharCode());
                         errorCount++;
                         continue;
                     }
 
-                    // Создать запись курса, если её ещё нет
-                    if (!existingCurrencyIds.contains(currency.getId())) {
-                        RateEntity rate = createRateEntity(currency, rateDict, country, updateDate);
-                        newRates.add(rate);
-                        existingCurrencyIds.add(currency.getId());
+                    if (country == null) {
+                        log.warn("Не найден справочник страны для кода: {} ({})",
+                                currency.getNumCode(), currency.getCharCode());
+                        errorCount++;
+                        continue;
                     }
 
+                    // Создать запись курса
+                    RateEntity rate = createRateEntity(currency, rateDict, country, rateDate);
+                    newRates.add(rate);
+                    existingCurrencyIds.add(currency.getId());
                     processedCount++;
+
                 } catch (Exception e) {
                     errorCount++;
-                    log.error("Ошибка при обработке валюты {}: {}", currency.getCharCode(), e.getMessage());
+                    log.error("Ошибка при обработке валюты {}: {}",
+                            currency.getCharCode(), e.getMessage());
                 }
             }
 
-            // 8. Сохраняем курсы (теперь foreign key корректны)
+            // 5. Сохраняем курсы
             if (!newRates.isEmpty()) {
                 rateRepository.saveAll(newRates);
                 log.info("Создано новых записей в журнале курсов: {}", newRates.size());
             }
 
             long duration = System.currentTimeMillis() - startTime;
-            log.info("Синхронизация завершена за {} мс. Успешно: {}, Ошибок: {}",
+            log.info("Синхронизация завершена за {} мс. Добавлено: {}, Ошибок: {}",
                     duration, processedCount, errorCount);
+
             return processedCount;
 
         } catch (Exception e) {
