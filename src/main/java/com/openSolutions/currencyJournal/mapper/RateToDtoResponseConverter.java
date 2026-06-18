@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
  * Маппер для конвертации сущностей в DTO
  */
 @Component
-public class RateMapper {
+public class RateToDtoResponseConverter implements DtoConverter<RateEntity, RateDtoResponse> {
 
     /**
      * Конвертировать RateEntity в RateDto
      */
-    public RateDtoResponse toRateDto(RateEntity entity) {
+    public RateDtoResponse convert(RateEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -40,30 +40,6 @@ public class RateMapper {
             dto.setRateDictName(entity.getRateDict().getName());
             dto.setCharCode(entity.getRateDict().getCharCode());
             dto.setNumCode(entity.getRateDict().getNumCode());
-        }
-
-        return dto;
-    }
-
-    /**
-     * Конвертировать RateDictEntity в RateDictDto
-     */
-    public RateDictDtoResponse toRateDictDtoResponse(RateDictEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        RateDictDtoResponse dto = new RateDictDtoResponse();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setNumCode(entity.getNumCode());
-        dto.setCharCode(entity.getCharCode());
-
-        // Подсчитать количество записей курса
-        if (entity.getRates() != null) {
-            dto.setRatesCount((long) entity.getRates().size());
-        } else {
-            dto.setRatesCount(0L);
         }
 
         return dto;

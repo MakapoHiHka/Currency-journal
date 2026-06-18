@@ -5,8 +5,8 @@ import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CountryMapper {
-    public CountryDtoResponse toCountryResponseDto(CountryEntity countryEntity){
+public class CountryToDtoResponseConverter implements DtoConverter<CountryEntity, CountryDtoResponse> {
+    public CountryDtoResponse convert(CountryEntity countryEntity){
         CountryDtoResponse response = new CountryDtoResponse();
         response.setId(countryEntity.getId());
         response.setName(countryEntity.getName());

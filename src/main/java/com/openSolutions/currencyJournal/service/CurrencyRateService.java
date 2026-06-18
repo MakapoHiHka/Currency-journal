@@ -10,13 +10,14 @@ import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
-import com.openSolutions.currencyJournal.mapper.CountryMapper;
+import com.openSolutions.currencyJournal.mapper.CountryToDtoResponseConverter;
 import com.openSolutions.currencyJournal.mapper.PageableMapper;
+import com.openSolutions.currencyJournal.mapper.RateDictToDtoResponseConverter;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
 import lombok.RequiredArgsConstructor;
-import com.openSolutions.currencyJournal.mapper.RateMapper;
+import com.openSolutions.currencyJournal.mapper.RateToDtoResponseConverter;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +43,10 @@ public class CurrencyRateService {
     private final RateDictRepository rateDictRepository;
     private final CountryRepository countryRepository;
     private final RateRepository rateRepository;
-    private final RateMapper rateMapper;
+    private final RateToDtoResponseConverter rateToDtoResponseConverter;
     private final PageableMapper pageableMapper;
-    private final CountryMapper countryMapper;
+    private final CountryToDtoResponseConverter countryToDtoResponseConverter;
+    private final RateDictToDtoResponseConverter rateDictToDtoResponseConverter;
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
@@ -307,7 +309,7 @@ public class CurrencyRateService {
             }
         }
 
-        return ratesPage.map(rateMapper::toRateDto);
+        return ratesPage.map(rateToDtoResponseConverter::convert);
     }
 
     /**
@@ -317,7 +319,7 @@ public class CurrencyRateService {
     public List<RateDictDtoResponse> getRateDict() {
         log.debug("Запрос справочника валют");
         return rateDictRepository.findAllByOrderByNameAsc().stream()
-                .map(rateMapper::toRateDictDtoResponse)
+                .map(rateDictToDtoResponseConverter::convert)
                 .collect(Collectors.toList());
     }
 
@@ -328,7 +330,7 @@ public class CurrencyRateService {
     public List<CountryDtoResponse> getCountries() {
         log.debug("Запрос справочника стран");
         return countryRepository.findAllByOrderByNameAsc().stream()
-                .map(countryMapper::toCountryResponseDto)
+                .map(countryToDtoResponseConverter::convert)
                 .collect(Collectors.toList());
     }
 
@@ -339,7 +341,7 @@ public class CurrencyRateService {
     public Optional<RateDtoResponse> getLatestRate(String currencyId) {
         log.debug("Запрос последнего курса для валюты: {}", currencyId);
         return rateRepository.findTopByCurrencyIdOrderByRateDateDesc(currencyId)
-                .map(rateMapper::toRateDto);
+                .map(rateToDtoResponseConverter::convert);
     }
 
     /**
@@ -352,7 +354,7 @@ public class CurrencyRateService {
 
         Page<RateEntity> entityPage = rateRepository.findByRateDateBetween(startOfDay, endOfDay, pageable);
 
-        return entityPage.map(rateMapper::toRateDto);
+        return entityPage.map(rateToDtoResponseConverter::convert);
     }
 
     @Transactional
@@ -378,7 +380,7 @@ public class CurrencyRateService {
         RateEntity updatedRate = rateRepository.save(existingRate);
         log.info("Курс валюты с ID {} успешно обновлен", request.getId());
 
-        return rateMapper.toRateDto(updatedRate);
+        return rateToDtoResponseConverter.convert(updatedRate);
 
     }
 }
