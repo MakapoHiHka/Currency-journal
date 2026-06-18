@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.openSolutions.currencyJournal.specification.RateSpecification.*;
 
 @Service
 @RequiredArgsConstructor
@@ -235,79 +238,19 @@ public class CurrencyRateService {
      */
     @Transactional(readOnly = true)
     public Page<RateDtoResponse> getRates(RateSearchRequest request) {
-
-    String currencyId = request.getCurrencyId();
-    Long countryId = request.getCountryId();
-    LocalDateTime startDate = request.getStartDate();
-    LocalDateTime endDate = request.getEndDate();
-    Pageable pageable = pageableMapper.getPageable(request);
         log.debug("Запрос журнала курсов: currencyId={}, countryId={}, startDate={}, endDate={}",
-                currencyId, countryId, startDate, endDate);
+                request.getCurrencyId(), request.getCountryId(),
+                request.getStartDate(), request.getEndDate());
 
-        boolean hasCurrency = currencyId != null && !currencyId.isEmpty();
-        boolean hasCountry = countryId != null;
-        boolean hasStart = startDate != null;
-        boolean hasEnd = endDate != null;
+        // Собираем спецификацию
+        Specification<RateEntity> spec = Specification
+                .where(hasCurrencyId(request.getCurrencyId()))
+                .and(hasCountryId(request.getCountryId()))
+                .and(rateDateAfter(request.getStartDate()))
+                .and(rateDateBefore(request.getEndDate()));
 
-        Page<RateEntity> ratesPage;
-
-        // Если есть и currencyId, и countryId
-        if (hasCurrency && hasCountry) {
-            if (hasStart && hasEnd) {
-                ratesPage = rateRepository.findByCountryIdAndCurrencyIdAndRateDateBetween(
-                        countryId, currencyId, startDate, endDate, pageable);
-            } else if (hasStart) {
-                ratesPage = rateRepository.findByCountryIdAndCurrencyIdAndRateDateAfter(
-                        countryId, currencyId, startDate, pageable);
-            } else if (hasEnd) {
-                ratesPage = rateRepository.findByCountryIdAndCurrencyIdAndRateDateBefore(
-                        countryId, currencyId, endDate, pageable);
-            } else {
-                ratesPage = rateRepository.findByCountryIdAndCurrencyId(countryId, currencyId, pageable);
-            }
-        }
-        // Только countryId
-        else if (hasCountry) {
-            if (hasStart && hasEnd) {
-                ratesPage = rateRepository.findByCountryIdAndRateDateBetween(
-                        countryId, startDate, endDate, pageable);
-            } else if (hasStart) {
-                ratesPage = rateRepository.findByCountryIdAndRateDateAfter(
-                        countryId, startDate, pageable);
-            } else if (hasEnd) {
-                ratesPage = rateRepository.findByCountryIdAndRateDateBefore(
-                        countryId, endDate, pageable);
-            } else {
-                ratesPage = rateRepository.findByCountryId(countryId, pageable);
-            }
-        }
-        // Только currencyId (без countryId)
-        else if (hasCurrency) {
-            if (hasStart && hasEnd) {
-                ratesPage = rateRepository.findByCurrencyIdAndRateDateBetween(
-                        currencyId, startDate, endDate, pageable);
-            } else if (hasStart) {
-                ratesPage = rateRepository.findByCurrencyIdAndRateDateAfter(
-                        currencyId, startDate, pageable);
-            } else if (hasEnd) {
-                ratesPage = rateRepository.findByCurrencyIdAndRateDateBefore(
-                        currencyId, endDate, pageable);
-            } else {
-                ratesPage = rateRepository.findByCurrencyId(currencyId, pageable);
-            }
-        }
-        // Без фильтров по валюте и стране
-        else {
-            if (hasStart && hasEnd) {
-                ratesPage = rateRepository.findByRateDateBetween(startDate, endDate, pageable);
-            } else if (hasStart) {
-                ratesPage = rateRepository.findByRateDateAfter(startDate, pageable);
-            } else if (hasEnd) {
-                ratesPage = rateRepository.findByRateDateBefore(endDate, pageable);
-            } else {
-                ratesPage = rateRepository.findAll(pageable);
-            }
-        }
+        Pageable pageable = pageableMapper.getPageable(request);
+        Page<RateEntity> ratesPage = rateRepository.findAll(spec, pageable);
 
         return ratesPage.map(rateToDtoResponseConverter::convert);
     }
@@ -344,18 +287,6 @@ public class CurrencyRateService {
                 .map(rateToDtoResponseConverter::convert);
     }
 
-    /**
-     * Получить курсы за сегодня
-     */
-    @Transactional(readOnly = true)
-    public Page<RateDtoResponse> getTodayRates(Pageable pageable) {
-        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
-
-        Page<RateEntity> entityPage = rateRepository.findByRateDateBetween(startOfDay, endOfDay, pageable);
-
-        return entityPage.map(rateToDtoResponseConverter::convert);
-    }
 
     @Transactional
     public RateDtoResponse updateRate(RateUpdateRequest request) {

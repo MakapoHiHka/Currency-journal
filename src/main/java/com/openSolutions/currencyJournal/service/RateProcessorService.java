@@ -7,6 +7,7 @@ import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RateProcessorService {
 
     private static final Logger log = LoggerFactory.getLogger(RateProcessorService.class);
@@ -26,13 +28,6 @@ public class RateProcessorService {
     private final RateRepository rateRepository;
     private final CountryRepository countryRepository;
 
-    public RateProcessorService(RateDictRepository rateDictRepository,
-                                RateRepository rateRepository,
-                                CountryRepository countryRepository) {
-        this.rateDictRepository = rateDictRepository;
-        this.rateRepository = rateRepository;
-        this.countryRepository = countryRepository;
-    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void processCurrency(CbrCurrencyDto currency, LocalDateTime rateDate) {
