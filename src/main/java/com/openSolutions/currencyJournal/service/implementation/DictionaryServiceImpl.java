@@ -1,10 +1,11 @@
-package com.openSolutions.currencyJournal.service;
+package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
 import com.openSolutions.currencyJournal.mapper.*;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
+import com.openSolutions.currencyJournal.service.interfaces.DictionaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DictionaryService {
+public class DictionaryServiceImpl implements DictionaryService {
 
     private final RateDictRepository rateDictRepository;
     private final CountryRepository countryRepository;

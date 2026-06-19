@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.service;
+package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
@@ -6,6 +6,7 @@ import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import com.openSolutions.currencyJournal.mapper.*;
 import com.openSolutions.currencyJournal.repository.RateRepository;
+import com.openSolutions.currencyJournal.service.interfaces.RateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RateService {
+public class RateServiceImpl implements RateService {
 
     private final RateRepository rateRepository;
     private final RateToDtoResponseConverter rateToDtoResponseConverter;

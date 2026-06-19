@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.service;
+package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
@@ -7,6 +7,7 @@ import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
+import com.openSolutions.currencyJournal.service.interfaces.RateProcessorService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class RateProcessorService {
+public class RateProcessorServiceImpl implements RateProcessorService {
 
-    private static final Logger log = LoggerFactory.getLogger(RateProcessorService.class);
+    private static final Logger log = LoggerFactory.getLogger(RateProcessorServiceImpl.class);
 
     private final RateDictRepository rateDictRepository;
     private final RateRepository rateRepository;
@@ -59,7 +60,7 @@ public class RateProcessorService {
 
     /**
      * Найти или создать страну по числовому коду валюты
-     * NumCode валюты совпадает с NumCode страны (ISO 3166-1)
+     * NumCode валюты совпадает с NumCode страны
      */
     private CountryEntity findOrCreateCountry(CbrCurrencyDto currency) {
         if (currency.getNumCode() == null) {

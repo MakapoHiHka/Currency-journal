@@ -5,7 +5,7 @@ import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
 import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.PageResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
-import com.openSolutions.currencyJournal.service.RateService;
+import com.openSolutions.currencyJournal.service.implementation.RateServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Currency Rates", description = "Операции с курсами валют")
 public class CurrencyRateController {
 
-    private final RateService rateService;
+    private final RateServiceImpl rateServiceImpl;
 
     @PostMapping
     @Operation(summary = "Получение журнала курса валют с пагинацией и фильтрами")
@@ -31,7 +31,7 @@ public class CurrencyRateController {
                 request.getCurrencyId(), request.getPage(), request.getSize());
 
         return ResponseEntity.ok(
-                ApiResponse.success(PageResponse.of(rateService.getRates(request)))
+                ApiResponse.success(PageResponse.of(rateServiceImpl.getRates(request)))
         );
     }
 
@@ -40,7 +40,7 @@ public class CurrencyRateController {
     public ResponseEntity<ApiResponse<RateDtoResponse>> getLatestRate(@PathVariable String currencyId) {
         log.debug("Запрос последнего курса для {}", currencyId);
 
-        return rateService.getLatestRate(currencyId)
+        return rateServiceImpl.getLatestRate(currencyId)
                 .map(rate -> ResponseEntity.ok(ApiResponse.success(rate)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -50,7 +50,7 @@ public class CurrencyRateController {
     public ResponseEntity<ApiResponse<RateDtoResponse>> updateRate(@Valid @RequestBody RateUpdateRequest request) {
 
         log.info("Редактирование курса ID={}", request.getId());
-        RateDtoResponse updatedRate = rateService.updateRate(request);
+        RateDtoResponse updatedRate = rateServiceImpl.updateRate(request);
 
         return ResponseEntity.ok(ApiResponse.success("Курс валюты успешно обновлен", updatedRate));
     }

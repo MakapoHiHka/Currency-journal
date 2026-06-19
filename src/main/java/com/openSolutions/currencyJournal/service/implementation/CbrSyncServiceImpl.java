@@ -1,9 +1,10 @@
-package com.openSolutions.currencyJournal.service;
+package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
 import com.openSolutions.currencyJournal.domain.dto.cbr.CbrDailyRatesDto;
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
+import com.openSolutions.currencyJournal.service.interfaces.CbrSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,10 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CbrSyncService {
+public class CbrSyncServiceImpl implements CbrSyncService {
 
     private final CbrXmlParser xmlParser;
-    private final RateProcessorService rateProcessorService;
+    private final RateProcessorServiceImpl rateProcessorServiceImpl;
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
@@ -56,7 +57,7 @@ public class CbrSyncService {
             for (CbrCurrencyDto currency : currencies) {
                 try {
                     // Делегируем обработку RateProcessorService
-                    rateProcessorService.processCurrency(currency, rateDate);
+                    rateProcessorServiceImpl.processCurrency(currency, rateDate);
                     processedCount++;
                 } catch (Exception e) {
                     errorCount++;

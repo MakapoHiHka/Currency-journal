@@ -2,7 +2,7 @@ package com.openSolutions.currencyJournal.controller;
 
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.SyncResponse;
-import com.openSolutions.currencyJournal.service.CbrSyncService;
+import com.openSolutions.currencyJournal.service.implementation.CbrSyncServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/currency")
@@ -22,7 +20,7 @@ import java.time.LocalDateTime;
 @Tag(name = "System", description = "Системные операции и синхронизация")
 public class CurrencySyncController {
 
-    private final CbrSyncService cbrSyncService;
+    private final CbrSyncServiceImpl cbrSyncServiceImpl;
 
     @PostMapping("/sync")
     @Operation(summary = "Ручная синхронизация курсов валют с ЦБ")
@@ -30,7 +28,7 @@ public class CurrencySyncController {
         log.info("Запуск ручной синхронизации с ЦБ");
 
         long startTime = System.currentTimeMillis();
-        int count = cbrSyncService.synchronizeWithCbr();
+        int count = cbrSyncServiceImpl.synchronizeWithCbr();
         long duration = System.currentTimeMillis() - startTime;
 
         SyncResponse response = new SyncResponse(true, "Синхронизация успешно выполнена", count, duration);
@@ -40,6 +38,6 @@ public class CurrencySyncController {
     @GetMapping("/status")
     @Operation(summary = "Проверка работоспособности")
     public ResponseEntity<StatusResponse> statusCheck() {
-        return ResponseEntity.ok(cbrSyncService.getStatusInfo());
+        return ResponseEntity.ok(cbrSyncServiceImpl.getStatusInfo());
     }
 }
