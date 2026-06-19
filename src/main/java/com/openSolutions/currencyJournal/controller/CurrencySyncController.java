@@ -2,7 +2,7 @@ package com.openSolutions.currencyJournal.controller;
 
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.SyncResponse;
-import com.openSolutions.currencyJournal.service.CurrencyRateService;
+import com.openSolutions.currencyJournal.service.CbrSyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Tag(name = "System", description = "Системные операции и синхронизация")
 public class CurrencySyncController {
 
-    private final CurrencyRateService currencyRateService;
+    private final CbrSyncService cbrSyncService;
 
     @PostMapping("/sync")
     @Operation(summary = "Ручная синхронизация курсов валют с ЦБ")
@@ -30,7 +30,7 @@ public class CurrencySyncController {
         log.info("Запуск ручной синхронизации с ЦБ");
 
         long startTime = System.currentTimeMillis();
-        int count = currencyRateService.synchronizeWithCbr();
+        int count = cbrSyncService.synchronizeWithCbr();
         long duration = System.currentTimeMillis() - startTime;
 
         SyncResponse response = new SyncResponse(true, "Синхронизация успешно выполнена", count, duration);

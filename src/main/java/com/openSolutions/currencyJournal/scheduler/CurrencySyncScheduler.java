@@ -1,6 +1,6 @@
 package com.openSolutions.currencyJournal.scheduler;
 
-import com.openSolutions.currencyJournal.service.CurrencyRateService;
+import com.openSolutions.currencyJournal.service.CbrSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "sync.enabled", havingValue = "true", matchIfMissing = true)
 public class CurrencySyncScheduler {
 
-    private final CurrencyRateService currencyRateService;
+    private final CbrSyncService cbrSyncService;
 
     /**
      * Автоматическая синхронизация курсов валют.
@@ -27,7 +27,7 @@ public class CurrencySyncScheduler {
 
         try {
             long startTime = System.currentTimeMillis();
-            int count = currencyRateService.synchronizeWithCbr();
+            int count = cbrSyncService.synchronizeWithCbr();
             long duration = System.currentTimeMillis() - startTime;
 
             log.info("Автоматическая синхронизация завершена успешно. Обновлено курсов: {}, время: {} мс", count, duration);
