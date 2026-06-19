@@ -1,16 +1,17 @@
 package com.openSolutions.currencyJournal.domain.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatusResponse {
     private String status;
     private String service;
     private LocalDateTime timestamp;
-    private String notes;
+    private boolean isAutoSyncEnabled;
+    private int autoSyncIntervalSeconds;
 }

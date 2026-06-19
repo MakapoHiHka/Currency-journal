@@ -2,6 +2,7 @@ package com.openSolutions.currencyJournal.service;
 
 import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
 import com.openSolutions.currencyJournal.domain.dto.cbr.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,12 @@ public class CbrSyncService {
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
+
+    @Value("${sync.enabled:false}")
+    private boolean isSyncEnabled;
+
+    @Value("${sync.interval.seconds:-1}")
+    private int SyncIntervalSeconds;
 
     /**
      * Ручная синхронизация курсов валют с ЦБ
@@ -68,5 +75,9 @@ public class CbrSyncService {
             log.error("Критическая ошибка при синхронизации", e);
             throw new RuntimeException("Не удалось синхронизировать курсы валют", e);
         }
+    }
+
+    public StatusResponse getStatusInfo(){
+        return new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), isSyncEnabled, SyncIntervalSeconds);
     }
 }

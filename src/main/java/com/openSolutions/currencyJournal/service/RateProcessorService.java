@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -117,9 +115,6 @@ public class RateProcessorService {
             log.error("Ошибка парсинга значения курса {}: {}", currency.getValue(), e.getMessage());
             rate.setValue(BigDecimal.ZERO);
         }
-
         rateRepository.save(rate);
     }
-
-
 }

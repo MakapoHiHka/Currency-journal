@@ -40,7 +40,6 @@ public class CurrencySyncController {
     @GetMapping("/status")
     @Operation(summary = "Проверка работоспособности")
     public ResponseEntity<StatusResponse> statusCheck() {
-        StatusResponse response = new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), "Тут будет информация об автоматической синхронизации");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(cbrSyncService.getStatusInfo());
     }
 }
