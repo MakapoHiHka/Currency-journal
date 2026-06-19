@@ -18,10 +18,8 @@ public class CurrencySyncScheduler {
 
     /**
      * Автоматическая синхронизация курсов валют.
-     * fixedRateString использует SpEL (#{...}), чтобы умножить секунды из properties на 1000 (миллисекунды).
-     * По умолчанию: 3600 секунд (1 час)
      */
-    @Scheduled(fixedRateString = "#{${sync.interval.seconds:3600} * 1000}")
+    @Scheduled(cron = "${sync.interval.cron:0 0 * * * *}")
     public void syncWithCbr() {
         log.info("Запуск автоматической синхронизации с ЦБ");
 

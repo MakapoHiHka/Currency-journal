@@ -28,8 +28,8 @@ public class CbrSyncServiceImpl implements CbrSyncService {
     @Value("${sync.enabled:false}")
     private boolean isSyncEnabled;
 
-    @Value("${sync.interval.seconds:-1}")
-    private int SyncIntervalSeconds;
+    @Value("${sync.interval.cron:-1}")
+    private String SyncIntervalCron;
 
     /**
      * Ручная синхронизация курсов валют с ЦБ
@@ -79,6 +79,6 @@ public class CbrSyncServiceImpl implements CbrSyncService {
     }
 
     public StatusResponse getStatusInfo(){
-        return new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), isSyncEnabled, SyncIntervalSeconds);
+        return new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), isSyncEnabled, SyncIntervalCron);
     }
 }

@@ -13,5 +13,5 @@ public class StatusResponse {
     private String service;
     private LocalDateTime timestamp;
     private boolean isAutoSyncEnabled;
-    private int autoSyncIntervalSeconds;
+    private String autoSyncIntervalCron;
 }
