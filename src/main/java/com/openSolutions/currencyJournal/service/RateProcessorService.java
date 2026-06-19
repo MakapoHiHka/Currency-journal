@@ -29,7 +29,6 @@ public class RateProcessorService {
     private final CountryRepository countryRepository;
 
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public void processCurrency(CbrCurrencyDto currency, LocalDateTime rateDate) {
         log.debug("Обработка валюты: {} ({})", currency.getCharCode(), currency.getName());
 
@@ -92,11 +91,6 @@ public class RateProcessorService {
 
     private void createRateRecord(CbrCurrencyDto currency, RateDictEntity rateDict,
                                   CountryEntity country, LocalDateTime rateDate) {
-        // Проверить, есть ли уже запись
-        if (rateRepository.existsByCurrencyIdAndRateDate(currency.getId(), rateDate)) {
-            log.debug("Запись уже существует для {} на {}", currency.getCharCode(), rateDate);
-            return;
-        }
 
         RateEntity rate = new RateEntity();
         rate.setCurrencyId(currency.getId());

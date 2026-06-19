@@ -20,6 +20,4 @@ public class CountryDtoResponse {
     // Символьный код
     private String charCode;
 
-    // Количество записей курса в журнале
-    private Long ratesCount;
 }

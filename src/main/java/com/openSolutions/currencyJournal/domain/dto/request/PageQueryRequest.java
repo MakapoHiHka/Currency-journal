@@ -18,7 +18,7 @@ public class PageQueryRequest {
     @Min(value = 1, message = "Размер страницы должен быть больше 0")
     private int size = 20;
 
-    private String sortBy = "rateDate";
+    private String sortBy = "created";
 
     private String sortDir = "desc";
 }

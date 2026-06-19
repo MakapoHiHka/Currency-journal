@@ -15,14 +15,6 @@ import java.util.Optional;
 @Repository
 public interface RateRepository extends JpaRepository<RateEntity, Long>, JpaSpecificationExecutor<RateEntity> {
 
-    // ИСПРАВЛЕНО: добавлен JOIN FETCH
-    @Query("SELECT r FROM RateEntity r LEFT JOIN FETCH r.country LEFT JOIN FETCH r.rateDict " +
-            "WHERE r.currencyId = :currencyId AND r.rateDate BETWEEN :startDate AND :endDate " +
-            "ORDER BY r.rateDate DESC")
-    List<RateEntity> findByCurrencyIdAndPeriod(
-            @Param("currencyId") String currencyId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
 
     @Override
     @EntityGraph(attributePaths = {"country", "rateDict"})
@@ -30,7 +22,5 @@ public interface RateRepository extends JpaRepository<RateEntity, Long>, JpaSpec
 
     @EntityGraph(attributePaths = {"country", "rateDict"})
     Optional<RateEntity> findTopByCurrencyIdOrderByRateDateDesc(@Param("currencyId") String currencyId);
-
-    boolean existsByCurrencyIdAndRateDate(String currencyId, LocalDateTime rateDate);
 
 }
