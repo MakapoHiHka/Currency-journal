@@ -1,9 +1,7 @@
 package com.openSolutions.currencyJournal.mapper;
 
 import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
-import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
-import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import org.springframework.stereotype.Component;
 
 /**

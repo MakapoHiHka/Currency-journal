@@ -1,14 +1,14 @@
 package openSolutions.currencyJournal;
 
+import com.openSolutions.currencyJournal.domain.dto.request.PageQueryRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
-import com.openSolutions.currencyJournal.mapper.PageableMapper;
-import com.openSolutions.currencyJournal.mapper.RateSearchRequestToRateSpecificationConverter;
-import com.openSolutions.currencyJournal.mapper.RateToDtoResponseConverter;
+import com.openSolutions.currencyJournal.mapper.DtoConverter;
+import com.openSolutions.currencyJournal.mapper.PageableConverter;
 import com.openSolutions.currencyJournal.repository.RateRepository;
-import com.openSolutions.currencyJournal.service.implementation.RateServiceImpl;
+import com.openSolutions.currencyJournal.service.interfaces.RateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,16 +39,16 @@ class RateServiceTest {
     private RateRepository rateRepository;
 
     @Mock
-    private RateToDtoResponseConverter rateToDtoResponseConverter;
+    private DtoConverter<RateEntity, RateDtoResponse> rateToDtoResponseConverter;
 
     @Mock
-    private PageableMapper pageableMapper;
+    private PageableConverter<PageQueryRequest> pageableMapper;
 
     @Mock
-    private RateSearchRequestToRateSpecificationConverter rateSearchRequestToSpecificationConverter;
+    private DtoConverter<RateSearchRequest, Specification<RateEntity>> rateSearchRequestToSpecificationConverter;
 
     @InjectMocks
-    private RateServiceImpl rateService;
+    private RateService rateService;
 
     private RateEntity testRateEntity;
     private RateDtoResponse testRateDto;

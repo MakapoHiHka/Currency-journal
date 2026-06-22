@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.service.implementation;
 
+import com.openSolutions.currencyJournal.domain.dto.request.PageQueryRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
@@ -24,9 +25,9 @@ import java.util.Optional;
 public class RateServiceImpl implements RateService {
 
     private final RateRepository rateRepository;
-    private final RateToDtoResponseConverter rateToDtoResponseConverter;
-    private final PageableMapper pageableMapper;
-    private final RateSearchRequestToRateSpecificationConverter rateSearchRequestToSpecificationConverter;
+    private final DtoConverter<RateEntity, RateDtoResponse> rateToDtoResponseConverter;
+    private final PageableConverter<PageQueryRequest> pageableMapper;
+    private final DtoConverter<RateSearchRequest, Specification<RateEntity>> rateSearchRequestToSpecificationConverter;
 
 
     /**

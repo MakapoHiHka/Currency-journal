@@ -2,6 +2,8 @@ package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
+import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
+import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import com.openSolutions.currencyJournal.mapper.*;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
@@ -21,8 +23,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     private final RateDictRepository rateDictRepository;
     private final CountryRepository countryRepository;
-    private final CountryToDtoResponseConverter countryToDtoResponseConverter;
-    private final RateDictToDtoResponseConverter rateDictToDtoResponseConverter;
+    private final DtoConverter<CountryEntity, CountryDtoResponse> countryToDtoResponseConverter;
+    private final DtoConverter<RateDictEntity, RateDictDtoResponse> rateDictToDtoResponseConverter;
 
     /**
      * Чтение справочника валют
