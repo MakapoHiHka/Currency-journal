@@ -23,9 +23,9 @@ public class CurrencyRateController {
 
     private final RateService rateService;
 
-    @PostMapping
+    @GetMapping
     @Operation(summary = "Получение журнала курса валют с пагинацией и фильтрами")
-    public ResponseEntity<ApiResponse<PageResponse<RateDtoResponse>>> getRates(@Valid @RequestBody RateSearchRequest request) {
+    public ResponseEntity<ApiResponse<PageResponse<RateDtoResponse>>> getRates(@Valid @ModelAttribute RateSearchRequest request) {
 
         log.debug("Запрос курсов: currencyId={}, page={}, size={}",
                 request.getCurrencyId(), request.getPage(), request.getSize());
@@ -47,7 +47,7 @@ public class CurrencyRateController {
 
     @PutMapping
     @Operation(summary = "Редактирование курса валюты")
-    public ResponseEntity<ApiResponse<RateDtoResponse>> updateRate(@Valid @RequestBody RateUpdateRequest request) {
+    public ResponseEntity<ApiResponse<RateDtoResponse>> updateRate(@Valid @ModelAttribute RateUpdateRequest request) {
 
         log.info("Редактирование курса ID={}", request.getId());
         RateDtoResponse updatedRate = rateService.updateRate(request);
