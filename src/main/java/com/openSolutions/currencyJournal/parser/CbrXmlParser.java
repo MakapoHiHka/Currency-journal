@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Парсер XML ответа от ЦБ РФ
@@ -23,6 +26,11 @@ public class CbrXmlParser {
     public CbrXmlParser() {
         this.xmlMapper = new XmlMapper();
         this.restTemplate = new RestTemplate();
+        //для работы с UTF-8
+        this.restTemplate.getMessageConverters().removeIf(converter ->
+                converter instanceof StringHttpMessageConverter);
+        this.restTemplate.getMessageConverters().add(0,
+                new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
     /**
