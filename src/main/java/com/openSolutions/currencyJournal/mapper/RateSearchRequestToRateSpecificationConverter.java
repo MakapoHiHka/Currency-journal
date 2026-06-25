@@ -5,7 +5,7 @@ import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import static com.openSolutions.currencyJournal.specification.RateSpecification.*;
+import static com.openSolutions.currencyJournal.utils.RateSpecification.*;
 
 @Component
 public class RateSearchRequestToRateSpecificationConverter implements DtoConverter<RateSearchRequest, Specification<RateEntity>>{

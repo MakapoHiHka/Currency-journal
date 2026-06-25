@@ -27,11 +27,8 @@ public class CurrencyRateController {
     @Operation(summary = "Получение журнала курса валют с пагинацией и фильтрами")
     public ResponseEntity<ApiResponse<PageResponse<RateDtoResponse>>> getRates(@Valid @ModelAttribute RateSearchRequest request) {
 
-        log.debug("Запрос курсов: currencyId={}, page={}, size={}",
-                request.getCurrencyId(), request.getPage(), request.getSize());
 
-        return ResponseEntity.ok(
-                ApiResponse.success(PageResponse.of(rateService.getRates(request)))
+        return ResponseEntity.ok(ApiResponse.success(PageResponse.of(rateService.getRates(request)))
         );
     }
 

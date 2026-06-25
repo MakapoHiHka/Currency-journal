@@ -1,9 +1,10 @@
-package com.openSolutions.currencyJournal.specification;
+package com.openSolutions.currencyJournal.utils;
 
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -39,7 +40,7 @@ public class RateSpecification {
     /**
      * Фильтр по дате начала (>= startDate).
      */
-    public static Specification<RateEntity> rateDateAfter(LocalDateTime startDate) {
+    public static Specification<RateEntity> rateDateAfter(LocalDate startDate) {
         return (root, query, cb) -> {
             if (startDate == null) {
                 return null;
@@ -51,7 +52,7 @@ public class RateSpecification {
     /**
      * Фильтр по дате окончания (<= endDate).
      */
-    public static Specification<RateEntity> rateDateBefore(LocalDateTime endDate) {
+    public static Specification<RateEntity> rateDateBefore(LocalDate endDate) {
         return (root, query, cb) -> {
             if (endDate == null) {
                 return null;
