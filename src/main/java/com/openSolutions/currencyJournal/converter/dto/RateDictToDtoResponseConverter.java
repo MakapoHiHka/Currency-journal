@@ -1,11 +1,12 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter.dto;
 
 import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
+import com.openSolutions.currencyJournal.converter.DtoConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RateDictToDtoResponseConverter implements DtoConverter<RateDictEntity, RateDictDtoResponse>{
+public class RateDictToDtoResponseConverter implements DtoConverter<RateDictEntity, RateDictDtoResponse> {
 
     /**
      * Конвертировать RateDictEntity в RateDictDto

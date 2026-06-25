@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.service.interfaces;
+package com.openSolutions.currencyJournal.service;
 
 import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
 import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;

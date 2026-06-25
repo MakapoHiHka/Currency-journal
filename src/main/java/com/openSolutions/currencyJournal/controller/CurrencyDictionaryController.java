@@ -3,7 +3,7 @@ package com.openSolutions.currencyJournal.controller;
 import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
-import com.openSolutions.currencyJournal.service.interfaces.DictionaryService;
+import com.openSolutions.currencyJournal.service.DictionaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,8 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter.dto;
 
 import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
+import com.openSolutions.currencyJournal.converter.DtoConverter;
 import org.springframework.stereotype.Component;
 
 @Component

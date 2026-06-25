@@ -2,7 +2,7 @@ package com.openSolutions.currencyJournal.controller;
 
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.SyncResponse;
-import com.openSolutions.currencyJournal.service.interfaces.CbrSyncService;
+import com.openSolutions.currencyJournal.service.CbrSyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

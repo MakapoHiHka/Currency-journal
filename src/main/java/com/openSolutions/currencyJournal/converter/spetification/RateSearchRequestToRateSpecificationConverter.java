@@ -1,13 +1,14 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter.spetification;
 
 import com.openSolutions.currencyJournal.domain.dto.request.RateSearchRequest;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
+import com.openSolutions.currencyJournal.converter.DtoConverter;
 import com.openSolutions.currencyJournal.utils.SpecificationUtil;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RateSearchRequestToRateSpecificationConverter implements DtoConverter<RateSearchRequest, Specification<RateEntity>>{
+public class RateSearchRequestToRateSpecificationConverter implements DtoConverter<RateSearchRequest, Specification<RateEntity>> {
 
     public Specification<RateEntity> convert(RateSearchRequest request){
         // Собираем спецификацию

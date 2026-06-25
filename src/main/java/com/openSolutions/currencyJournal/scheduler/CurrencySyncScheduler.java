@@ -1,6 +1,6 @@
 package com.openSolutions.currencyJournal.scheduler;
 
-import com.openSolutions.currencyJournal.service.interfaces.CbrSyncService;
+import com.openSolutions.currencyJournal.service.CbrSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

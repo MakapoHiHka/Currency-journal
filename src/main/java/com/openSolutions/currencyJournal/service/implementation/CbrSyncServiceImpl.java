@@ -2,14 +2,16 @@ package com.openSolutions.currencyJournal.service.implementation;
 
 import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
-import com.openSolutions.currencyJournal.parser.CbrXmlParser;
-import com.openSolutions.currencyJournal.service.interfaces.CbrSyncService;
-import com.openSolutions.currencyJournal.service.interfaces.RateProcessorService;
-import com.openSolutions.currencyJournal.utils.SyncProperty;
+import com.openSolutions.currencyJournal.exceptions.BadCbrResponseException;
+import com.openSolutions.currencyJournal.property.CbrApiProperty;
+import com.openSolutions.currencyJournal.service.CbrSyncService;
+import com.openSolutions.currencyJournal.service.RateProcessorService;
+import com.openSolutions.currencyJournal.property.SyncProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 
@@ -18,20 +20,22 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CbrSyncServiceImpl implements CbrSyncService {
 
-    private final CbrXmlParser xmlParser;
     private final RateProcessorService rateProcessorService;
     private final SyncProperty syncProperty;
-
-    @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
-    private String cbrApiUrl;
+    private final CbrApiProperty cbrApiProperty;
+    private final RestTemplate restTemplate;
 
     /**
      * Ручная синхронизация курсов валют с ЦБ
      */
     public long synchronizeWithCbr() {
         long startTime = System.currentTimeMillis();
-        CbrDailyRatesDto ratesDto = xmlParser.parseFromUrl(cbrApiUrl);
-        rateProcessorService.processCurrencies(ratesDto);
+        ResponseEntity<CbrDailyRatesDto> response = restTemplate.getForEntity(cbrApiProperty.getUrl(), CbrDailyRatesDto.class);
+        //проверить ответ на успешность
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            throw new BadCbrResponseException("Не удалось получить данные с ЦБ. Status: " + response.getStatusCode());
+        }
+        rateProcessorService.processCurrencies(response.getBody());
         return System.currentTimeMillis() - startTime;
     }
 

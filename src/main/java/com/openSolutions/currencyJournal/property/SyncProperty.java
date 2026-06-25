@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.utils;
+package com.openSolutions.currencyJournal.property;
 
 public interface SyncProperty {
 

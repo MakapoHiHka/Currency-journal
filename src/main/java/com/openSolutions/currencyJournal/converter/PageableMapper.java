@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter;
 
 import com.openSolutions.currencyJournal.domain.dto.request.PageQueryRequest;
 import org.springframework.data.domain.PageRequest;

@@ -8,7 +8,7 @@ import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
-import com.openSolutions.currencyJournal.service.interfaces.RateProcessorService;
+import com.openSolutions.currencyJournal.service.RateProcessorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

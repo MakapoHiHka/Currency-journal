@@ -5,12 +5,13 @@ import com.openSolutions.currencyJournal.domain.dto.request.RateUpdateRequest;
 import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.PageResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDtoResponse;
-import com.openSolutions.currencyJournal.service.interfaces.RateService;
+import com.openSolutions.currencyJournal.service.RateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class CurrencyRateController {
 
     @GetMapping
     @Operation(summary = "Получение журнала курса валют с пагинацией и фильтрами")
-    public ResponseEntity<ApiResponse<PageResponse<RateDtoResponse>>> getRates(@Valid @ModelAttribute RateSearchRequest request) {
+    public ResponseEntity<ApiResponse<PageResponse<RateDtoResponse>>> getRates(@Valid @ParameterObject @ModelAttribute RateSearchRequest request) {
 
 
         return ResponseEntity.ok(ApiResponse.success(PageResponse.of(rateService.getRates(request)))
@@ -44,7 +45,7 @@ public class CurrencyRateController {
 
     @PutMapping
     @Operation(summary = "Редактирование курса валюты")
-    public ResponseEntity<ApiResponse<RateDtoResponse>> updateRate(@Valid @ModelAttribute RateUpdateRequest request) {
+    public ResponseEntity<ApiResponse<RateDtoResponse>> updateRate(@Valid @ParameterObject @ModelAttribute RateUpdateRequest request) {
 
         log.info("Редактирование курса ID={}", request.getId());
         RateDtoResponse updatedRate = rateService.updateRate(request);

@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter;
 
 public interface DtoConverter<S, D> {
     D convert(S source);

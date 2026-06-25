@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.mapper;
+package com.openSolutions.currencyJournal.converter;
 
 import org.springframework.data.domain.Pageable;
 
