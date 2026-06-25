@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.domain.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CountryDtoResponse {
     // Идентификатор
+    @JsonProperty(index=0)
     private Long id;
 
     // Название страны

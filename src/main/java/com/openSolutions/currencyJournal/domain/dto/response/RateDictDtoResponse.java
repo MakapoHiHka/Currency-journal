@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.domain.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 public class RateDictDtoResponse {
 
     // Идентификатор
+    @JsonProperty(index=0)
     private Long id;
 
     // Название валюты

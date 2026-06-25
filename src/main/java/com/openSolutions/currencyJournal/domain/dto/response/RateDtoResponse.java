@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.domain.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +18,11 @@ import java.time.LocalDateTime;
 public class RateDtoResponse {
 
     // Идентификатор записи
+    @JsonProperty(index=0)
     private Long id;
 
     // ID валюты из ЦБ (например, R01235)
+    @JsonProperty(index=1)
     private String currencyId;
 
     // ID страны
