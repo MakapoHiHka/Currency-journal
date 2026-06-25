@@ -5,6 +5,7 @@ import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.parser.CbrXmlParser;
 import com.openSolutions.currencyJournal.service.interfaces.CbrSyncService;
 import com.openSolutions.currencyJournal.service.interfaces.RateProcessorService;
+import com.openSolutions.currencyJournal.utils.SyncProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,15 +20,10 @@ public class CbrSyncServiceImpl implements CbrSyncService {
 
     private final CbrXmlParser xmlParser;
     private final RateProcessorService rateProcessorService;
+    private final SyncProperty syncProperty;
 
     @Value("${cbr.api.url:https://www.cbr-xml-daily.ru/daily_utf8.xml}")
     private String cbrApiUrl;
-
-    @Value("${sync.enabled:false}")
-    private boolean isSyncEnabled;
-
-    @Value("${sync.interval.cron:-1}")
-    private String SyncIntervalCron;
 
     /**
      * Ручная синхронизация курсов валют с ЦБ
@@ -41,6 +37,6 @@ public class CbrSyncServiceImpl implements CbrSyncService {
 
 
     public StatusResponse getStatusInfo(){
-        return new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), isSyncEnabled, SyncIntervalCron);
+        return new StatusResponse("UP", "Currency Journal API", LocalDateTime.now(), syncProperty.isEnabled(), syncProperty.getIntervalCron());
     }
 }

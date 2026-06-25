@@ -19,7 +19,7 @@ public class CurrencySyncScheduler {
     /**
      * Автоматическая синхронизация курсов валют.
      */
-    @Scheduled(cron = "${sync.interval.cron:0 0 * * * *}")
+    @Scheduled(cron = "${sync.interval-cron}")
     public void syncWithCbr() {
         log.info("Запуск автоматической синхронизации с ЦБ");
 
