@@ -25,14 +25,11 @@ public class CurrencySyncController {
     @PostMapping("/sync")
     @Operation(summary = "Ручная синхронизация курсов валют с ЦБ")
     public ResponseEntity<SyncResponse> synchronizeWithCbr() {
+
         log.info("Запуск ручной синхронизации с ЦБ");
+        long duration = cbrSyncService.synchronizeWithCbr();
+        return ResponseEntity.ok(new SyncResponse(true, "Синхронизация успешно выполнена", duration));
 
-        long startTime = System.currentTimeMillis();
-        int count = cbrSyncService.synchronizeWithCbr();
-        long duration = System.currentTimeMillis() - startTime;
-
-        SyncResponse response = new SyncResponse(true, "Синхронизация успешно выполнена", count, duration);
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/status")

@@ -25,10 +25,10 @@ public class CurrencySyncScheduler {
 
         try {
             long startTime = System.currentTimeMillis();
-            int count = cbrSyncService.synchronizeWithCbr();
-            long duration = System.currentTimeMillis() - startTime;
+            long duration = cbrSyncService.synchronizeWithCbr();
+            //long duration = System.currentTimeMillis() - startTime;
 
-            log.info("Автоматическая синхронизация завершена успешно. Обновлено курсов: {}, время: {} мс", count, duration);
+            log.info("Автоматическая синхронизация завершена успешно. Время: {} мс", duration);
         } catch (Exception e) {
             // Ловим исключение, чтобы падение одной синхронизации не останавливало весь планировщик
             log.error("Ошибка при автоматической синхронизации: {}", e.getMessage(), e);

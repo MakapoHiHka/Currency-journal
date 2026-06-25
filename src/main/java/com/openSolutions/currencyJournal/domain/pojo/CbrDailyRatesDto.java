@@ -1,4 +1,4 @@
-package com.openSolutions.currencyJournal.domain.dto.cbr;
+package com.openSolutions.currencyJournal.domain.pojo;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

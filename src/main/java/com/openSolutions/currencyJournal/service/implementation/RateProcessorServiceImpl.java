@@ -1,16 +1,16 @@
 package com.openSolutions.currencyJournal.service.implementation;
 
-import com.openSolutions.currencyJournal.domain.dto.cbr.CbrCurrencyDto;
+import com.openSolutions.currencyJournal.domain.pojo.CbrCurrencyDto;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
+import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
 import com.openSolutions.currencyJournal.service.interfaces.RateProcessorService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,16 +19,15 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RateProcessorServiceImpl implements RateProcessorService {
-
-    private static final Logger log = LoggerFactory.getLogger(RateProcessorServiceImpl.class);
 
     private final RateDictRepository rateDictRepository;
     private final RateRepository rateRepository;
     private final CountryRepository countryRepository;
 
 
-    public void processCurrency(CbrCurrencyDto currency, LocalDateTime rateDate) {
+    private void processCurrency(CbrCurrencyDto currency, LocalDateTime rateDate) {
         log.debug("Обработка валюты: {} ({})", currency.getCharCode(), currency.getName());
 
         // Найти или создать запись в справочнике валют
@@ -41,6 +40,16 @@ public class RateProcessorServiceImpl implements RateProcessorService {
         createRateRecord(currency, rateDict, country, rateDate);
 
         log.debug("Валюта {} успешно обработана", currency.getCharCode());
+    }
+
+    public void processCurrencies(CbrDailyRatesDto currencies) {
+        currencies.getCurrencies().stream().forEach(x -> {
+            try {
+                processCurrency(x, currencies.getUpdated());
+            } catch (Exception e){
+                log.error("Ошибка {}", e.getMessage());
+            }
+        });
     }
 
     private RateDictEntity findOrCreateRateDict(CbrCurrencyDto currency) {

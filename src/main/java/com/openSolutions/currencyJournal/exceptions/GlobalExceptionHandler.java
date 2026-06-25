@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
@@ -46,11 +47,26 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @ExceptionHandler(BadCbrResponseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBadCbrResponseException(BadCbrResponseException ex) {
+        // Логируем на уровне DEBUG, чтобы не засорять консоль
+        log.debug("Ошибка при получении данных с ресурса: {}", ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error("Ошибка при получении данных с ресурса ЦБ"), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    //например, нет интернета при парсинге
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleResourceAccessException(ResourceAccessException ex) {
+        log.debug("Нет доступа к ресурсу: {}", ex.getMessage());
+        return new ResponseEntity<>(ApiResponse.error("Нет доступа к ресурсу"), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     // Обработка бизнес-исключений
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex) {
         log.error("Бизнес-ошибка: {}", ex.getMessage());
-        // Возвращаем 400 Bad Request с нашим форматом
+        // Возвращаем 400 Bad Request
         return new ResponseEntity<>(ApiResponse.error(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
     // Обработчик для отсутствующих статических ресурсов (favicon.ico и т.д.)

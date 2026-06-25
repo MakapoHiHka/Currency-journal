@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class SyncResponse {
     private boolean success;
     private String message;
-    private int currenciesProcessed;
     private long durationMs;
 }
