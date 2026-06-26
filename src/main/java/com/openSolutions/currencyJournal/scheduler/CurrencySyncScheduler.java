@@ -1,5 +1,6 @@
 package com.openSolutions.currencyJournal.scheduler;
 
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 import com.openSolutions.currencyJournal.service.CbrSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,9 @@ public class CurrencySyncScheduler {
         log.info("Запуск автоматической синхронизации с ЦБ");
 
         try {
-            long startTime = System.currentTimeMillis();
-            long duration = cbrSyncService.synchronizeWithCbr();
-            //long duration = System.currentTimeMillis() - startTime;
+            CbrDailyRatesDtoResponse body = cbrSyncService.synchronizeWithCbr();
 
-            log.info("Автоматическая синхронизация завершена успешно. Время: {} мс", duration);
+            log.info("Автоматическая синхронизация завершена успешно. Получено валют: {}", body.getCurrencies().size());
         } catch (Exception e) {
             // Ловим исключение, чтобы падение одной синхронизации не останавливало весь планировщик
             log.error("Ошибка при автоматической синхронизации: {}", e.getMessage(), e);

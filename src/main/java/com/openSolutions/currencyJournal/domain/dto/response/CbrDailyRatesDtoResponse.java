@@ -1,8 +1,9 @@
-package com.openSolutions.currencyJournal.domain.pojo;
+package com.openSolutions.currencyJournal.domain.dto.response;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.openSolutions.currencyJournal.domain.pojo.CbrCurrencyDto;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JacksonXmlRootElement(localName = "ValCurs")
-public class CbrDailyRatesDto {
+public class CbrDailyRatesDtoResponse {
 
     /**
      * Дата обновления курсов (атрибут Date корневого элемента)

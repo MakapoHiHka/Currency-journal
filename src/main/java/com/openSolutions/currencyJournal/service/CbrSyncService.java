@@ -1,8 +1,9 @@
 package com.openSolutions.currencyJournal.service;
 
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 
 public interface CbrSyncService {
-    long synchronizeWithCbr();
+    CbrDailyRatesDtoResponse synchronizeWithCbr();
     StatusResponse getStatusInfo();
 }

@@ -4,7 +4,7 @@ import com.openSolutions.currencyJournal.domain.pojo.CbrCurrencyDto;
 import com.openSolutions.currencyJournal.domain.entity.CountryEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateDictEntity;
 import com.openSolutions.currencyJournal.domain.entity.RateEntity;
-import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 import com.openSolutions.currencyJournal.repository.CountryRepository;
 import com.openSolutions.currencyJournal.repository.RateDictRepository;
 import com.openSolutions.currencyJournal.repository.RateRepository;
@@ -42,7 +42,7 @@ public class RateProcessorServiceImpl implements RateProcessorService {
         log.debug("Валюта {} успешно обработана", currency.getCharCode());
     }
 
-    public void processCurrencies(CbrDailyRatesDto currencies) {
+    public void processCurrencies(CbrDailyRatesDtoResponse currencies) {
         currencies.getCurrencies().stream().forEach(x -> {
             try {
                 processCurrency(x, currencies.getUpdated());

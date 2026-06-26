@@ -1,8 +1,8 @@
 package com.openSolutions.currencyJournal.service;
 
-import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 
 
 public interface RateProcessorService {
-    void processCurrencies(CbrDailyRatesDto currencies);
+    void processCurrencies(CbrDailyRatesDtoResponse currencies);
 }

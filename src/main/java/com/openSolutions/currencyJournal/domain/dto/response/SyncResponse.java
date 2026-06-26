@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class SyncResponse {
     private boolean success;
     private String message;
-    private long durationMs;
+    private CbrDailyRatesDtoResponse cbrDailyRatesDtoResponse;
 }

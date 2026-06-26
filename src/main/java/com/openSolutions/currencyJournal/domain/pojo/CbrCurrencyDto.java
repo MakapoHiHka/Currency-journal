@@ -30,6 +30,4 @@ public class CbrCurrencyDto {
     @JacksonXmlProperty(localName = "Value")
     private String value;
 
-    @JacksonXmlProperty(localName = "VunitRate")
-    private String vunitRate;
 }

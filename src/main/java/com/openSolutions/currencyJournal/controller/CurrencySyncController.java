@@ -2,6 +2,7 @@ package com.openSolutions.currencyJournal.controller;
 
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.SyncResponse;
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 import com.openSolutions.currencyJournal.service.CbrSyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,8 +28,8 @@ public class CurrencySyncController {
     public ResponseEntity<SyncResponse> synchronizeWithCbr() {
 
         log.info("Запуск ручной синхронизации с ЦБ");
-        long duration = cbrSyncService.synchronizeWithCbr();
-        return ResponseEntity.ok(new SyncResponse(true, "Синхронизация успешно выполнена", duration));
+        CbrDailyRatesDtoResponse body = cbrSyncService.synchronizeWithCbr();
+        return ResponseEntity.ok(new SyncResponse(true, "Синхронизация успешно выполнена", body));
 
     }
 

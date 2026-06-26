@@ -1,6 +1,6 @@
 package com.openSolutions.currencyJournal.service.implementation;
 
-import com.openSolutions.currencyJournal.domain.pojo.CbrDailyRatesDto;
+import com.openSolutions.currencyJournal.domain.dto.response.CbrDailyRatesDtoResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.StatusResponse;
 import com.openSolutions.currencyJournal.exceptions.BadCbrResponseException;
 import com.openSolutions.currencyJournal.property.CbrApiProperty;
@@ -28,15 +28,16 @@ public class CbrSyncServiceImpl implements CbrSyncService {
     /**
      * Ручная синхронизация курсов валют с ЦБ
      */
-    public long synchronizeWithCbr() {
-        long startTime = System.currentTimeMillis();
-        ResponseEntity<CbrDailyRatesDto> response = restTemplate.getForEntity(cbrApiProperty.getUrl(), CbrDailyRatesDto.class);
+    public CbrDailyRatesDtoResponse synchronizeWithCbr() {
+        //long startTime = System.currentTimeMillis();
+        ResponseEntity<CbrDailyRatesDtoResponse> response = restTemplate.getForEntity(cbrApiProperty.getUrl(), CbrDailyRatesDtoResponse.class);
         //проверить ответ на успешность
         if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new BadCbrResponseException("Не удалось получить данные с ЦБ. Status: " + response.getStatusCode());
         }
         rateProcessorService.processCurrencies(response.getBody());
-        return System.currentTimeMillis() - startTime;
+        //System.currentTimeMillis() - startTime;
+        return response.getBody();
     }
 
 
