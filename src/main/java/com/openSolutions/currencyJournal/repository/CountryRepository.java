@@ -24,43 +24,10 @@ public interface CountryRepository extends JpaRepository<CountryEntity, Long> {
     Optional<CountryEntity> findByNumCode(Integer numCode);
 
     /**
-     * Найти страну по символьному коду
-     */
-    Optional<CountryEntity> findByCharCode(String charCode);
-
-    /**
-     * Найти страну по имени
-     */
-    Optional<CountryEntity> findByName(String name);
-
-    /**
-     * Проверить существование страны по числовому коду
-     */
-    boolean existsByNumCode(Integer numCode);
-
-    /**
-     * Проверить существование страны по символьному коду
-     */
-    boolean existsByCharCode(String charCode);
-
-    /**
      * Найти все страны с пагинацией и сортировкой
      */
     @Override
     Page<CountryEntity> findAll(Pageable pageable);
-
-    /**
-     * Поиск стран по имени с пагинацией
-     */
-    @Query("SELECT c FROM CountryEntity c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))")
-    Page<CountryEntity> findByNameContaining(@Param("name") String name, Pageable pageable);
-
-    /**
-     * Найти страны по списку кодов
-     */
-    @Query("SELECT c FROM CountryEntity c WHERE c.charCode IN :codes")
-    List<CountryEntity> findByCharCodeIn(@Param("codes") List<String> codes);
-
 
     @EntityGraph(attributePaths = {"rates"})
     List<CountryEntity> findAllByOrderByNameAsc();

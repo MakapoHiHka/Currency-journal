@@ -22,35 +22,8 @@ public interface RateDictRepository extends JpaRepository<RateDictEntity, Long> 
     Optional<RateDictEntity> findByNumCode(Integer numCode);
 
     /**
-     * Найти валюту по символьному коду
-     */
-    Optional<RateDictEntity> findByCharCode(String charCode);
-
-
-    Optional<RateDictEntity> findByName(String name);
-
-    /**
-     * Проверить существование валюты по числовому коду
-     */
-    boolean existsByNumCode(Integer numCode);
-
-    /**
-     * Проверить существование валюты по символьному коду
-     */
-    boolean existsByCharCode(String charCode);
-
-    /**
      * Найти все валюты с сортировкой по имени
      */
     @EntityGraph(attributePaths = {"rates"})
     List<RateDictEntity> findAllByOrderByNameAsc();
-
-    @Query("SELECT r FROM RateDictEntity r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.name")
-    List<RateDictEntity> findByNameContaining(@Param("name") String name);
-
-    @Query("SELECT r FROM RateDictEntity r WHERE r.charCode IN :codes")
-    List<RateDictEntity> findByCharCodeIn(@Param("codes") List<String> codes);
-
-    @Query("SELECT r FROM RateDictEntity r WHERE r.numCode IN :codes")
-    List<RateDictEntity> findByNumCodeIn(@Param("codes") List<Integer> codes);
 }
