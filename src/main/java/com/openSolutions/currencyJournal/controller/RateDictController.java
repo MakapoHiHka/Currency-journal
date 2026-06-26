@@ -1,9 +1,8 @@
 package com.openSolutions.currencyJournal.controller;
 
 import com.openSolutions.currencyJournal.domain.dto.response.ApiResponse;
-import com.openSolutions.currencyJournal.domain.dto.response.CountryDtoResponse;
 import com.openSolutions.currencyJournal.domain.dto.response.RateDictDtoResponse;
-import com.openSolutions.currencyJournal.service.DictionaryService;
+import com.openSolutions.currencyJournal.service.RateDictService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,24 +16,18 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/currency")
+@RequestMapping("/api/rate-dict")
 @RequiredArgsConstructor
-@Tag(name = "Dictionaries", description = "Справочники валют и стран")
-public class CurrencyDictionaryController {
+@Tag(name = "RateDict", description = "Справочники валют")
+public class RateDictController {
 
-    private final DictionaryService dictionaryService;
+    private final RateDictService rateDictService;
 
     @GetMapping("/dict")
     @Operation(summary = "Получение справочника валют")
     public ResponseEntity<ApiResponse<List<RateDictDtoResponse>>> getRateDict() {
         log.debug("Запрос справочника валют");
-        return ResponseEntity.ok(ApiResponse.success(dictionaryService.getRateDict()));
+        return ResponseEntity.ok(ApiResponse.success(rateDictService.getRateDict()));
     }
 
-    @GetMapping("/countries")
-    @Operation(summary = "Получение справочника стран")
-    public ResponseEntity<ApiResponse<List<CountryDtoResponse>>> getCountries() {
-        log.debug("Запрос справочника стран");
-        return ResponseEntity.ok(ApiResponse.success(dictionaryService.getCountries()));
-    }
 }
